@@ -149,6 +149,11 @@
 
                 // Add mousemove event listener to the document
                 document.addEventListener('mousemove', function(e) {
+                    // Check if we're on mobile
+                    if (window.matchMedia('(max-width: 768px)').matches) {
+                        return; // Don't handle mouse movement on mobile
+                    }
+
                     // Throttle the mouse movement updates
                     if (throttleTimeout) return;
 
@@ -190,6 +195,33 @@
                         updateGradient(progress);
                     }
                 });
+
+                // Add automatic gradient animation for mobile
+                function startMobileGradientAnimation() {
+                    if (!window.matchMedia('(max-width: 768px)').matches) {
+                        return; // Only run on mobile
+                    }
+
+                    let mobileProgress = 0;
+                    const MOBILE_TRANSITION_SPEED = 0.0005; // Adjust this value to control animation speed
+
+                    function animateMobileGradient() {
+                        if (!document.body.classList.contains('viewing-info')) {
+                            mobileProgress += MOBILE_TRANSITION_SPEED;
+                            if (mobileProgress >= 1) {
+                                mobileProgress = 0;
+                                currentIndex = (currentIndex + 1) % gradientSets.length;
+                            }
+                            updateGradient(mobileProgress);
+                        }
+                        requestAnimationFrame(animateMobileGradient);
+                    }
+
+                    animateMobileGradient();
+                }
+
+                // Start mobile animation when page loads
+                startMobileGradientAnimation();
 
                 function updateAirQualityGradient(aqiValue) {
                     // Stop listening to mouse movements temporarily

@@ -48,6 +48,7 @@
         
         <!-- Air quality info display, initially hidden -->
         <div id="air-quality-info" style="display: none;">
+            <img src="img/air-transparent.png" alt="AIR" class="info-logo">
             <h2 id="neighborhood-name">NEIGHBORHOOD</h2>
             <p id="monitor-location">Air Quality Station</p>
             <div class="aqi-container">
@@ -253,12 +254,15 @@
                     const airQualityInfo = document.getElementById('air-quality-info');
                     if (!e.target.closest('#air-quality-info') && !e.target.closest('.location-dropdown')) {
                         if (airQualityInfo) {
-                            airQualityInfo.style.display = 'none';
-                            document.body.classList.remove('viewing-info');
-                            // Reset to initial state for mouse movement
-                            currentIndex = 0;
-                            progress = 0;
-                            updateGradient(0);
+                            airQualityInfo.classList.remove('visible');
+                            setTimeout(() => {
+                                airQualityInfo.style.display = 'none';
+                                document.body.classList.remove('viewing-info');
+                                // Reset to initial state for mouse movement
+                                currentIndex = 0;
+                                progress = 0;
+                                updateGradient(0);
+                            }, 300); // Match the transition duration
                         }
                     }
                 });
@@ -287,7 +291,12 @@
                 // Function to display air quality for a neighborhood
                 function displayAirQuality(neighborhood) {
                     // Show the container
+                    const airQualityInfo = document.getElementById('air-quality-info');
                     airQualityInfo.style.display = 'block';
+                    // Trigger reflow
+                    airQualityInfo.offsetHeight;
+                    // Add visible class for transition
+                    airQualityInfo.classList.add('visible');
                     document.body.classList.add('viewing-info');
                     
                     // Update the neighborhood name

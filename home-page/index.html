@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>AIRNY</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="background"></div>
+        <div class="language-selector">
+            <span>ENGLISH</span> <span class="down-arrow">▼</span>
+        </div>
+        <div class="content-container">
+            <div class="logo-container">
+                <img src="img/air-transparent.png" alt="AIR" class="logo">
+            </div>
+            
+            <div class="location-dropdown">
+                <div class="location-select">
+                    <input type="text" class="location-search" placeholder="SELECT YOUR LOCATION" />
+                    <span class="down-arrow">▼</span>
+                </div>
+                <div class="neighborhood-list">
+                    <div class="neighborhood" data-neighborhood="BATTERY PARK CITY">BATTERY PARK CITY</div>
+                    <div class="neighborhood" data-neighborhood="CHELSEA">CHELSEA</div>
+                    <div class="neighborhood" data-neighborhood="CHINATOWN">CHINATOWN</div>
+                    <div class="neighborhood" data-neighborhood="CIVIC CENTER">CIVIC CENTER</div>
+                    <div class="neighborhood" data-neighborhood="EAST VILLAGE">EAST VILLAGE</div>
+                    <div class="neighborhood" data-neighborhood="FINANCIAL DISTRICT">FINANCIAL DISTRICT</div>
+                    <div class="neighborhood" data-neighborhood="FLATIRON">FLATIRON</div>
+                    <div class="neighborhood" data-neighborhood="GRAMERCY PARK">GRAMERCY PARK</div>
+                    <div class="neighborhood" data-neighborhood="GREENWICH VILLAGE">GREENWICH VILLAGE</div>
+                    <div class="neighborhood" data-neighborhood="HARLEM">HARLEM</div>
+                    <div class="neighborhood" data-neighborhood="HELL'S KITCHEN">HELL'S KITCHEN</div>
+                    <div class="neighborhood" data-neighborhood="LOWER EAST SIDE">LOWER EAST SIDE</div>
+                    <div class="neighborhood" data-neighborhood="MIDTOWN">MIDTOWN</div>
+                    <div class="neighborhood" data-neighborhood="SOHO">SOHO</div>
+                    <div class="neighborhood" data-neighborhood="TRIBECA">TRIBECA</div>
+                    <div class="neighborhood" data-neighborhood="UPPER EAST SIDE">UPPER EAST SIDE</div>
+                    <div class="neighborhood" data-neighborhood="UPPER WEST SIDE">UPPER WEST SIDE</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Air quality info display, initially hidden -->
+        <div id="air-quality-info" style="display: none;">
+            <h2 id="neighborhood-name">NEIGHBORHOOD</h2>
+            <p id="monitor-location">Air Quality Station</p>
+            <div class="aqi-container">
+                <div id="aqi-value" class="aqi-value">0</div>
+                <div id="aqi-category" class="aqi-category">Category</div>
+            </div>
+            <div class="parameters">
+                <div class="parameter">
+                    <span class="param-name">PM2.5</span>
+                    <span id="pm25-value" class="param-value">0 µg/m³</span>
+                </div>
+                <div class="parameter">
+                    <span class="param-name">PM10</span>
+                    <span id="pm10-value" class="param-value">0 µg/m³</span>
+                </div>
+                <div class="parameter">
+                    <span class="param-name">O3</span>
+                    <span id="o3-value" class="param-value">0 ppm</span>
+                </div>
+                <div class="parameter">
+                    <span class="param-name">NO2</span>
+                    <span id="no2-value" class="param-value">0 µg/m³</span>
+                </div>
+            </div>
+            <p id="data-source" class="data-source">Source: OpenAQ</p>
+            <p id="last-updated" class="last-updated">Last Updated: Just now</p>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const locationSearch = document.querySelector('.location-search');
+                if (locationSearch) {
+                    locationSearch.style.opacity = '0.8';
+                }
+                const dropdownList = document.querySelector('.dropdown-list');
+                let isDropdownOpen = false;
+
+                // Initialize gradient with default vibrant colors
+                const backgroundElement = document.querySelector('.background');
+                let currentIndex = 0;
+                let progress = 0;
+                let lastTransitionTime = 0;
+                const TRANSITION_COOLDOWN = 1000; // 1 second cooldown between transitions
+
+                const gradientSets = [
+                    {
+                        startHue: 115,
+                        endHue: 315
+                    },
+                    {
+                        startHue: 60,
+                        endHue: 240
+                    },
+                    {
+                        startHue: 30,
+                        endHue: 210
+                    },
+                    {
+                        startHue: 0,
+                        endHue: 180
+                    }
+                ];
+
+                function interpolateHue(start, end, progress) {
+                    // Handle hue wrapping around 360 degrees
+                    let diff = end - start;
+                    if (Math.abs(diff) > 180) {
+                        if (diff > 0) {
+                            start += 360;
+                        } else {
+                            end += 360;
+                        }
+                    }
+                    let result = start + (end - start) * progress;
+                    return result % 360;
+                }
+
+                function updateGradient(currentProgress) {
+                    const currentSet = gradientSets[currentIndex];
+                    const nextSet = gradientSets[(currentIndex + 1) % gradientSets.length];
+
+                    // Interpolate between current and next gradient sets
+                    const startHue = interpolateHue(currentSet.startHue, nextSet.startHue, currentProgress);
+                    const endHue = interpolateHue(currentSet.endHue, nextSet.endHue, currentProgress);
+
+                    const startColor = `hsl(${startHue}, 100%, 50%)`;
+                    const endColor = `hsl(${endHue}, 100%, 50%)`;
+
+                    requestAnimationFrame(() => {
+                        backgroundElement.style.background = `radial-gradient(circle at center, ${startColor} 0%, ${endColor} 100%)`;
+                    });
+                }
+
+                // Initialize with first gradient
+                updateGradient(0);
+
+                let throttleTimeout = null;
+                const THROTTLE_DELAY = 50; // 50ms throttle for mouse movement
+
+                // Add mousemove event listener to the document
+                document.addEventListener('mousemove', function(e) {
+                    // Throttle the mouse movement updates
+                    if (throttleTimeout) return;
+
+                    throttleTimeout = setTimeout(() => {
+                        throttleTimeout = null;
+                    }, THROTTLE_DELAY);
+
+                    // Only update gradient if we're not viewing air quality info
+                    if (!document.body.classList.contains('viewing-info')) {
+                        // Calculate mouse position as percentage across screen
+                        const mouseX = e.clientX / window.innerWidth;
+                        const mouseY = e.clientY / window.innerHeight;
+                        
+                        // Calculate distance from center (0 at center, 1 at edges)
+                        const centerX = Math.abs(mouseX - 0.5) * 2;
+                        const centerY = Math.abs(mouseY - 0.5) * 2;
+                        const distanceFromCenter = Math.sqrt(centerX * centerX + centerY * centerY) / Math.sqrt(2);
+                        
+                        // Invert the distance so effect is strongest in center
+                        // Apply easing to make falloff more gradual
+                        const centerEffect = Math.pow(1 - distanceFromCenter, 0.7);
+                        
+                        // Calculate progress with reduced center effect
+                        const targetProgress = mouseX * (1 + centerEffect * 0.8);
+                        progress = progress * 0.5 + targetProgress * 0.5; // More balanced response
+
+                        // Normalize progress to prevent overshooting
+                        progress = Math.min(Math.max(progress, 0), 1);
+
+                        // Check if enough time has passed since last transition
+                        const now = Date.now();
+                        if (progress >= 0.95 && (now - lastTransitionTime) > TRANSITION_COOLDOWN) {
+                            progress = 0;
+                            currentIndex = (currentIndex + 1) % gradientSets.length;
+                            lastTransitionTime = now;
+                        }
+
+                        // Update the gradient
+                        updateGradient(progress);
+                    }
+                });
+
+                function updateAirQualityGradient(aqiValue) {
+                    // Stop listening to mouse movements temporarily
+                    if (aqiValue <= 50) {
+                        backgroundElement.style.background = `radial-gradient(circle at center, hsl(115, 100%, 50%) 0%, hsl(315, 100%, 50%) 100%)`;
+                    } else if (aqiValue <= 100) {
+                        backgroundElement.style.background = `radial-gradient(circle at center, hsl(60, 100%, 50%) 0%, hsl(240, 100%, 50%) 100%)`;
+                    } else if (aqiValue <= 150) {
+                        backgroundElement.style.background = `radial-gradient(circle at center, hsl(30, 100%, 50%) 0%, hsl(210, 100%, 50%) 100%)`;
+                    } else {
+                        backgroundElement.style.background = `radial-gradient(circle at center, hsl(0, 100%, 50%) 0%, hsl(180, 100%, 50%) 100%)`;
+                    }
+                }
+
+                // Update gradient whenever AQI changes
+                const observer = new MutationObserver(() => {
+                    const aqiElement = document.getElementById('aqi-value');
+                    const aqiValue = aqiElement ? parseInt(aqiElement.textContent) || 0 : 0;
+                    updateAirQualityGradient(aqiValue);
+                });
+                
+                const aqiElement = document.getElementById('aqi-value');
+                if (aqiElement) {
+                    observer.observe(aqiElement, { childList: true, characterData: true, subtree: true });
+                }
+
+                // Add click handler to close info panel and restart animation
+                document.addEventListener('click', function(e) {
+                    const airQualityInfo = document.getElementById('air-quality-info');
+                    if (!e.target.closest('#air-quality-info') && !e.target.closest('.location-dropdown')) {
+                        if (airQualityInfo) {
+                            airQualityInfo.style.display = 'none';
+                            document.body.classList.remove('viewing-info');
+                            // Reset to initial state for mouse movement
+                            currentIndex = 0;
+                            progress = 0;
+                            updateGradient(0);
+                        }
+                    }
+                });
+
+                // Dropdown functionality
+                const locationSelect = document.querySelector('.location-select');
+                const neighborhoodList = document.querySelector('.neighborhood-list');
+                
+                locationSelect.addEventListener('click', function() {
+                    neighborhoodList.classList.toggle('show');
+                });
+                
+                // Get all neighborhoods and add click handlers
+                const neighborhoods = document.querySelectorAll('.neighborhood');
+                const airQualityInfo = document.getElementById('air-quality-info');
+                
+                neighborhoods.forEach(function(neighborhood) {
+                    neighborhood.addEventListener('click', function() {
+                        const name = this.getAttribute('data-neighborhood');
+                        displayAirQuality(name);
+                        locationSelect.querySelector('span:first-child').textContent = name;
+                        neighborhoodList.classList.remove('show');
+                    });
+                });
+                
+                // Function to display air quality for a neighborhood
+                function displayAirQuality(neighborhood) {
+                    // Show the container
+                    airQualityInfo.style.display = 'block';
+                    document.body.classList.add('viewing-info');
+                    
+                    // Update the neighborhood name
+                    document.getElementById('neighborhood-name').textContent = neighborhood;
+                    
+                    // Generate random realistic values
+                    const pm25 = Math.floor(Math.random() * 30) + 5; // 5-35
+                    const pm10 = Math.floor(Math.random() * 40) + 15; // 15-55
+                    const o3 = (Math.random() * 0.05 + 0.01).toFixed(3); // 0.01-0.06
+                    const no2 = Math.floor(Math.random() * 30) + 10; // 10-40
+                    
+                    // Calculate AQI based on PM2.5
+                    let aqi = 0;
+                    let aqiCategory = "";
+                    
+                    if (pm25 <= 12) {
+                        aqi = Math.floor((pm25 / 12) * 50);
+                        aqiCategory = "Good";
+                    } else if (pm25 <= 35.4) {
+                        aqi = Math.floor(((pm25 - 12) / (35.4 - 12)) * (100 - 51) + 51);
+                        aqiCategory = "Moderate";
+                    } else {
+                        aqi = Math.floor(((pm25 - 35.4) / (55.4 - 35.4)) * (150 - 101) + 101);
+                        aqiCategory = "Unhealthy for Sensitive Groups";
+                    }
+                    
+                    // Update all values
+                    document.getElementById('monitor-location').textContent = `Air Monitor in ${neighborhood}`;
+                    document.getElementById('aqi-value').textContent = aqi;
+                    document.getElementById('aqi-category').textContent = aqiCategory;
+                    document.getElementById('pm25-value').textContent = `${pm25} µg/m³`;
+                    document.getElementById('pm10-value').textContent = `${pm10} µg/m³`;
+                    document.getElementById('o3-value').textContent = `${o3} ppm`;
+                    document.getElementById('no2-value').textContent = `${no2} µg/m³`;
+                    document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleString()}`;
+                }
+
+                // Add hover effect logger
+                const dropdown = document.querySelector('.location-dropdown');
+                dropdown.addEventListener('mouseenter', () => {
+                    console.log('Dropdown hover - Before:', window.getComputedStyle(document.body));
+                    setTimeout(() => {
+                        console.log('Dropdown hover - After:', window.getComputedStyle(document.body));
+                    }, 100);
+                });
+
+                dropdown.addEventListener('mouseleave', () => {
+                    console.log('Dropdown leave - Before:', window.getComputedStyle(document.body));
+                    setTimeout(() => {
+                        console.log('Dropdown leave - After:', window.getComputedStyle(document.body));
+                    }, 100);
+                });
+
+                // Filter neighborhoods based on search input
+                locationSearch.addEventListener('input', function(e) {
+                    const searchText = e.target.value.toLowerCase();
+                    neighborhoods.forEach(neighborhood => {
+                        const text = neighborhood.textContent.toLowerCase();
+                        if (text.includes(searchText)) {
+                            neighborhood.classList.remove('hidden');
+                        } else {
+                            neighborhood.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Show dropdown list when typing
+                    if (!isDropdownOpen) {
+                        dropdownList.style.display = 'block';
+                        isDropdownOpen = true;
+                    }
+                });
+
+                // Toggle dropdown on click
+                locationSelect.addEventListener('click', function() {
+                    if (isDropdownOpen) {
+                        dropdownList.style.display = 'none';
+                    } else {
+                        dropdownList.style.display = 'block';
+                    }
+                    isDropdownOpen = !isDropdownOpen;
+                });
+
+                // Handle neighborhood selection
+                neighborhoods.forEach(neighborhood => {
+                    neighborhood.addEventListener('click', function() {
+                        locationSearch.value = this.textContent;
+                        dropdownList.style.display = 'none';
+                        isDropdownOpen = false;
+                        // Trigger the existing neighborhood selection logic
+                        handleNeighborhoodSelection(this.textContent);
+                    });
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!locationDropdown.contains(e.target)) {
+                        dropdownList.style.display = 'none';
+                        isDropdownOpen = false;
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

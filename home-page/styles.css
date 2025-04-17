@@ -1,0 +1,300 @@
+@font-face {
+    font-family: 'Air';
+    src: url('ABCFavoritExpanded-Bold-Trial.otf') format('truetype');
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-family: 'Air', sans-serif;
+    color: black;
+    overflow: hidden;
+    background: transparent !important;
+    z-index: 0;
+}
+
+body::before,
+body::after {
+    display: none !important;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    background: transparent;
+    z-index: 1;
+    mix-blend-mode: normal;
+}
+
+.content-container::before,
+.content-container::after {
+    display: none !important;
+}
+
+.language-selector {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    border: 1px solid black;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 2;
+    mix-blend-mode: normal;
+}
+
+.logo-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    mix-blend-mode: normal;
+    transition: opacity 0.3s ease, pointer-events 0.3s ease;
+}
+
+.logo-container, .location-dropdown {
+    transition: opacity 0.3s ease, pointer-events 0.3s ease;
+}
+
+.viewing-info .location-dropdown {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.viewing-info .logo-container{
+    opacity: 0.5;
+}
+
+.logo {
+    width: auto;
+    max-width: 90%;
+    height: auto;
+    max-height: 50vh;
+    display: block;
+    margin: 0 auto;
+}
+
+.location-dropdown {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    border: 2px solid black;
+    position: absolute;
+    top: 62%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    margin-top: -10px;
+    mix-blend-mode: normal;
+}
+
+.location-search {
+    border: none;
+    background: transparent;
+    font-family: 'Air', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    width: 100%;
+    padding: 0;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* Placeholder styling for different browsers */
+.location-search::placeholder {
+    opacity: 0.8;
+    color: black;
+}
+.location-search::-webkit-input-placeholder {
+    opacity: 0.8;
+    color: black;
+}
+.location-search::-moz-placeholder {
+    opacity: 0.8;
+    color: black;
+}
+.location-search:-ms-input-placeholder {
+    opacity: 0.8;
+    color: black;
+}
+.location-search:-moz-placeholder {
+    opacity: 0.8;
+    color: black;
+}
+
+.location-search:focus {
+    outline: none;
+}
+
+.location-select {
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    border-bottom: none;
+}
+
+.neighborhood-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    position: absolute;
+    top: 100%;
+    left: -.75%;
+    width: 101.35%;
+    height: 500%;
+    background-color: transparent;
+    border: 2px solid black;
+    border-top: none;
+    box-sizing: border-box;
+    display: none;
+}
+
+.location-dropdown:hover .neighborhood-list,
+.neighborhood-list.show {
+    max-height: 300px;
+    overflow-y: auto;
+    display: block;
+}
+
+.neighborhood {
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    display: block;
+}
+
+.neighborhood:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.neighborhood.hidden {
+    display: none;
+}
+
+.down-arrow {
+    font-size: 8px;
+    margin-left: 4px;
+}
+
+#air-quality-info {
+    position: fixed;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 400px;
+    background-color: transparent;
+    color: black;
+    padding: 20px;
+    font-family: 'Air', sans-serif;
+    z-index: 999;
+    text-align: center;
+}
+
+#air-quality-info h2 {
+    margin-top: 0;
+    font-size: 20px;
+    letter-spacing: -.5px;
+    margin-bottom: 10px;
+}
+
+#air-quality-info .location-name {
+    font-size: 16px;
+    margin-bottom: 15px;
+    letter-spacing: -.5px;
+}
+
+#air-quality-info .aqi-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#air-quality-info .aqi-value {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#air-quality-info .aqi-category {
+    font-size: 14px;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+#air-quality-info .parameters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#air-quality-info .parameter {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 3px solid black;
+    padding-bottom: 5px;
+}
+
+#air-quality-info .param-name {
+    font-weight: bold;
+}
+
+#air-quality-info .data-source,
+#air-quality-info .last-updated {
+    font-size: 12px;
+    margin: 5px 0;
+    opacity: 1;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    transition: background 1s ease;
+}
+
+.background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}

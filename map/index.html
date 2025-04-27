@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIRNY</title>
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        @font-face {
+            font-family: 'Air';
+            src: url('ABCFavoritExpanded-Bold-Trial.otf') format('opentype');
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <div id="map"></div>
+        <div class="map-overlay"></div>
+    </div>
+    <div class="legend">
+        <h3>Air Quality Index</h3>
+        <div class="legend-item">
+            <span class="color-box good"></span>
+            <span>Good (0-50)</span>
+        </div>
+        <div class="legend-item">
+            <span class="color-box moderate"></span>
+            <span>Moderate (51-100)</span>
+        </div>
+        <div class="legend-item">
+            <span class="color-box unhealthy-sensitive"></span>
+            <span>Unhealthy for Sensitive Groups (101-150)</span>
+        </div>
+        <div class="legend-item">
+            <span class="color-box unhealthy"></span>
+            <span>Unhealthy (151-200)</span>
+        </div>
+    </div>
+    <div id="air-quality-info">
+        <div class="info-logo">
+            <img src="img/air-transparent.png" alt="AIR Logo">
+        </div>
+        <h2 id="neighborhood-name">Select a Neighborhood</h2>
+        <p id="monitor-location">Click on a neighborhood to view air quality data</p>
+        <div class="aqi-container">
+            <div class="aqi-value" id="aqi-value">--</div>
+            <div class="aqi-category" id="aqi-category">No Data</div>
+        </div>
+        <div class="parameters">
+            <div class="parameter">
+                <span class="param-name">PM2.5</span>
+                <span class="param-value" id="pm25-value">-- µg/m³</span>
+            </div>
+            <div class="parameter">
+                <span class="param-name">PM10</span>
+                <span class="param-value" id="pm10-value">-- µg/m³</span>
+            </div>
+            <div class="parameter">
+                <span class="param-name">O3</span>
+                <span class="param-value" id="o3-value">-- ppm</span>
+            </div>
+            <div class="parameter">
+                <span class="param-name">NO2</span>
+                <span class="param-value" id="no2-value">-- µg/m³</span>
+            </div>
+        </div>
+        <p class="data-source" id="data-source">Source: --</p>
+        <p class="last-updated" id="last-updated">Last Updated: --</p>
+    </div>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="neighborhoodCoordinates.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -9,23 +9,326 @@ console.log("Script loaded");
 
 // Mapping of NYC neighborhoods to approximate coordinates
 const neighborhoodCoordinates = {
+    // Manhattan
     "BATTERY PARK CITY": { lat: 40.7128, lng: -74.0134 },
     "CHELSEA": { lat: 40.7465, lng: -74.0014 },
+    "WEST CHELSEA": { lat: 40.7470, lng: -74.0040 },
     "CHINATOWN": { lat: 40.7158, lng: -73.9970 },
     "CIVIC CENTER": { lat: 40.7127, lng: -74.0059 },
     "EAST VILLAGE": { lat: 40.7265, lng: -73.9815 },
     "FINANCIAL DISTRICT": { lat: 40.7075, lng: -74.0113 },
+    "FULTON/SEAPORT": { lat: 40.7076, lng: -74.0036 },
     "FLATIRON": { lat: 40.7410, lng: -73.9896 },
+    "NOMAD": { lat: 40.7446, lng: -73.9835 },
     "GRAMERCY PARK": { lat: 40.7368, lng: -73.9845 },
     "GREENWICH VILLAGE": { lat: 40.7340, lng: -74.0018 },
-    "HARLEM": { lat: 40.8116, lng: -73.9465 },
-    "HELL'S KITCHEN": { lat: 40.7636, lng: -73.9932 },
+    "NOHO": { lat: 40.7282, lng: -73.9925 },
+    "LITTLE ITALY": { lat: 40.7191, lng: -73.9973 },
     "LOWER EAST SIDE": { lat: 40.7168, lng: -73.9861 },
-    "MIDTOWN": { lat: 40.7549, lng: -73.9840 },
+    "TWO BRIDGES": { lat: 40.7080, lng: -73.9960 },
+    "NOLITA": { lat: 40.7230, lng: -73.9950 },
     "SOHO": { lat: 40.7252, lng: -74.0022 },
+    "HUDSON SQUARE": { lat: 40.7255, lng: -74.0080 },
+    "STUYVESANT TOWN/PCV": { lat: 40.7315, lng: -73.9775 },
     "TRIBECA": { lat: 40.7164, lng: -74.0086 },
+    "WEST VILLAGE": { lat: 40.7358, lng: -74.0036 },
+    "CENTRAL PARK SOUTH": { lat: 40.7655, lng: -73.9762 },
+    "MIDTOWN": { lat: 40.7549, lng: -73.9840 },
+    "MIDTOWN EAST": { lat: 40.7540, lng: -73.9668 },
+    "KIPS BAY": { lat: 40.7423, lng: -73.9801 },
+    "MURRAY HILL": { lat: 40.7479, lng: -73.9757 },
+    "SUTTON PLACE": { lat: 40.7572, lng: -73.9615 },
+    "TURTLE BAY": { lat: 40.7540, lng: -73.9668 },
+    "BEEKMAN": { lat: 40.7100, lng: -73.9760 },
+    "MIDTOWN SOUTH": { lat: 40.7500, lng: -73.9800 },
+    "MIDTOWN WEST": { lat: 40.7550, lng: -73.9900 },
+    "HELL'S KITCHEN": { lat: 40.7636, lng: -73.9932 },
+    "HUDSON YARDS": { lat: 40.7550, lng: -74.0020 },
+    "ROOSEVELT ISLAND": { lat: 40.7622, lng: -73.9497 },
     "UPPER EAST SIDE": { lat: 40.7736, lng: -73.9566 },
-    "UPPER WEST SIDE": { lat: 40.7870, lng: -73.9754 }
+    "CARNEGIE HILL": { lat: 40.7840, lng: -73.9550 },
+    "LENOX HILL": { lat: 40.7670, lng: -73.9650 },
+    "UPPER CARNEGIE HILL": { lat: 40.7890, lng: -73.9550 },
+    "YORKVILLE": { lat: 40.7762, lng: -73.9495 },
+    "CENTRAL HARLEM": { lat: 40.8116, lng: -73.9465 },
+    "SOUTH HARLEM": { lat: 40.8030, lng: -73.9500 },
+    "EAST HARLEM": { lat: 40.7957, lng: -73.9389 },
+    "HAMILTON HEIGHTS": { lat: 40.8235, lng: -73.9500 },
+    "INWOOD": { lat: 40.8677, lng: -73.9212 },
+    "MARBLE HILL": { lat: 40.8761, lng: -73.9103 },
+    "MORNINGSIDE HEIGHTS": { lat: 40.8080, lng: -73.9618 },
+    "WASHINGTON HEIGHTS": { lat: 40.8417, lng: -73.9398 },
+    "FORT GEORGE": { lat: 40.8550, lng: -73.9300 },
+    "HUDSON HEIGHTS": { lat: 40.8500, lng: -73.9400 },
+    "WEST HARLEM": { lat: 40.8100, lng: -73.9500 },
+    "MANHATTANVILLE": { lat: 40.8150, lng: -73.9600 },
+    "UPPER WEST SIDE": { lat: 40.7870, lng: -73.9754 },
+    "LINCOLN SQUARE": { lat: 40.7738, lng: -73.9845 },
+    "MANHATTAN VALLEY": { lat: 40.8000, lng: -73.9700 },
+
+    // Brooklyn
+    "BATH BEACH": { lat: 40.6040, lng: -74.0050 },
+    "BAY RIDGE": { lat: 40.6150, lng: -74.0300 },
+    "FORT HAMILTON": { lat: 40.6086, lng: -74.0331 },
+    "BEDFORD-STUYVESANT": { lat: 40.6862, lng: -73.9419 },
+    "OCEAN HILL": { lat: 40.6750, lng: -73.9100 },
+    "STUYVESANT HEIGHTS": { lat: 40.6900, lng: -73.9300 },
+    "BENSONHURST": { lat: 40.6016, lng: -73.9944 },
+    "BERGEN BEACH": { lat: 40.6200, lng: -73.9200 },
+    "BOERUM HILL": { lat: 40.6862, lng: -73.9900 },
+    "BOROUGH PARK": { lat: 40.6339, lng: -73.9965 },
+    "MAPLETON": { lat: 40.6100, lng: -73.9800 },
+    "BRIGHTON BEACH": { lat: 40.5779, lng: -73.9597 },
+    "BROOKLYN HEIGHTS": { lat: 40.6954, lng: -73.9934 },
+    "BROWNSVILLE": { lat: 40.6639, lng: -73.9122 },
+    "BUSHWICK": { lat: 40.6944, lng: -73.9212 },
+    "CANARSIE": { lat: 40.6400, lng: -73.9000 },
+    "CARROLL GARDENS": { lat: 40.6805, lng: -73.9998 },
+    "CLINTON HILL": { lat: 40.6890, lng: -73.9660 },
+    "COBBLE HILL": { lat: 40.6865, lng: -73.9962 },
+    "COLUMBIA ST WATERFRONT DISTRICT": { lat: 40.6820, lng: -74.0020 },
+    "CONEY ISLAND": { lat: 40.5755, lng: -73.9700 },
+    "CROWN HEIGHTS": { lat: 40.6681, lng: -73.9448 },
+    "WEEKSVILLE": { lat: 40.6700, lng: -73.9200 },
+    "DUMBO": { lat: 40.7033, lng: -73.9881 },
+    "VINEGAR HILL": { lat: 40.7000, lng: -73.9800 },
+    "DITMAS PARK": { lat: 40.6400, lng: -73.9600 },
+    "FISKE TERRACE": { lat: 40.6400, lng: -73.9600 },
+    "DOWNTOWN BROOKLYN": { lat: 40.6900, lng: -73.9900 },
+    "DYKER HEIGHTS": { lat: 40.6180, lng: -74.0100 },
+    "EAST FLATBUSH": { lat: 40.6500, lng: -73.9300 },
+    "FARRAGUT": { lat: 40.6500, lng: -73.9200 },
+    "WINGATE": { lat: 40.6500, lng: -73.9200 },
+    "EAST NEW YORK": { lat: 40.6574, lng: -73.9030 },
+    "CITY LINE": { lat: 40.6500, lng: -73.8800 },
+    "CYPRESS HILLS": { lat: 40.6800, lng: -73.8800 },
+    "NEW LOTS": { lat: 40.6500, lng: -73.8800 },
+    "STARRETT CITY": { lat: 40.6500, lng: -73.8800 },
+    "FLATBUSH": { lat: 40.6400, lng: -73.9600 },
+    "FLATLANDS": { lat: 40.6200, lng: -73.9300 },
+    "FORT GREENE": { lat: 40.6896, lng: -73.9763 },
+    "GERRITSEN BEACH": { lat: 40.5900, lng: -73.9200 },
+    "GOWANUS": { lat: 40.6730, lng: -73.9900 },
+    "GRAVESEND": { lat: 40.5976, lng: -73.9652 },
+    "GREENPOINT": { lat: 40.7336, lng: -73.9587 },
+    "GREENWOOD": { lat: 40.6500, lng: -73.9800 },
+    "KENSINGTON": { lat: 40.6400, lng: -73.9800 },
+    "MANHATTAN BEACH": { lat: 40.5780, lng: -73.9500 },
+    "MARINE PARK": { lat: 40.6100, lng: -73.9300 },
+    "MIDWOOD": { lat: 40.6200, lng: -73.9600 },
+    "MILL BASIN": { lat: 40.6100, lng: -73.9100 },
+    "OCEAN PARKWAY": { lat: 40.6200, lng: -73.9700 },
+    "OLD MILL BASIN": { lat: 40.6100, lng: -73.9100 },
+    "PARK SLOPE": { lat: 40.6721, lng: -73.9772 },
+    "PROSPECT HEIGHTS": { lat: 40.6776, lng: -73.9690 },
+    "PROSPECT LEFFERTS GARDENS": { lat: 40.6600, lng: -73.9500 },
+    "PROSPECT PARK SOUTH": { lat: 40.6500, lng: -73.9700 },
+    "RED HOOK": { lat: 40.6755, lng: -74.0108 },
+    "SEAGATE": { lat: 40.5800, lng: -73.9800 },
+    "SHEEPSHEAD BAY": { lat: 40.5900, lng: -73.9400 },
+    "HOMECREST": { lat: 40.5900, lng: -73.9400 },
+    "MADISON": { lat: 40.5900, lng: -73.9400 },
+    "SUNSET PARK": { lat: 40.6455, lng: -74.0124 },
+    "WILLIAMSBURG": { lat: 40.7081, lng: -73.9571 },
+    "EAST WILLIAMSBURG": { lat: 40.7159, lng: -73.9330 },
+    "WINDSOR TERRACE": { lat: 40.6500, lng: -73.9800 },
+
+    // Bronx
+    "BAYCHESTER": { lat: 40.8700, lng: -73.8400 },
+    "BEDFORD PARK": { lat: 40.8700, lng: -73.8800 },
+    "BELMONT": { lat: 40.8522, lng: -73.8834 },
+    "BRONXWOOD": { lat: 40.8700, lng: -73.8600 },
+    "CASTLE HILL": { lat: 40.8200, lng: -73.8500 },
+    "CITY ISLAND": { lat: 40.8473, lng: -73.7865 },
+    "CO-OP CITY": { lat: 40.8700, lng: -73.8300 },
+    "CONCOURSE": { lat: 40.8300, lng: -73.9200 },
+    "COUNTRY CLUB": { lat: 40.8400, lng: -73.8200 },
+    "CROTONA PARK EAST": { lat: 40.8300, lng: -73.8900 },
+    "EAST TREMONT": { lat: 40.8400, lng: -73.8900 },
+    "WEST FARMS": { lat: 40.8500, lng: -73.8800 },
+    "EASTCHESTER": { lat: 40.8800, lng: -73.8300 },
+    "EDENWALD": { lat: 40.8800, lng: -73.8500 },
+    "FORDHAM": { lat: 40.8628, lng: -73.8841 },
+    "HIGHBRIDGE": { lat: 40.8400, lng: -73.9300 },
+    "HUNTS POINT": { lat: 40.8100, lng: -73.8800 },
+    "KINGSBRIDGE": { lat: 40.8700, lng: -73.9000 },
+    "KINGSBRIDGE HEIGHTS": { lat: 40.8700, lng: -73.9000 },
+    "LACONIA": { lat: 40.8700, lng: -73.8500 },
+    "LONGWOOD": { lat: 40.8200, lng: -73.8900 },
+    "MELROSE": { lat: 40.8200, lng: -73.9100 },
+    "MORRIS HEIGHTS": { lat: 40.8500, lng: -73.9200 },
+    "MORRIS PARK": { lat: 40.8543, lng: -73.8605 },
+    "MORRISANIA": { lat: 40.8300, lng: -73.9100 },
+    "CLAREMONT": { lat: 40.8300, lng: -73.9100 },
+    "MOTT HAVEN": { lat: 40.8090, lng: -73.9229 },
+    "NORTH NEW YORK": { lat: 40.8700, lng: -73.8400 },
+    "NORWOOD": { lat: 40.8700, lng: -73.8800 },
+    "PARKCHESTER": { lat: 40.8300, lng: -73.8600 },
+    "PELHAM BAY": { lat: 40.8498, lng: -73.8334 },
+    "PELHAM GARDENS": { lat: 40.8500, lng: -73.8400 },
+    "PELHAM PARKWAY": { lat: 40.8500, lng: -73.8500 },
+    "PORT MORRIS": { lat: 40.8000, lng: -73.9100 },
+    "RIVERDALE": { lat: 40.8904, lng: -73.9110 },
+    "FIELDSTON": { lat: 40.8900, lng: -73.9100 },
+    "SPUYTEN DUYVIL": { lat: 40.8800, lng: -73.9200 },
+    "SCHUYLERVILLE": { lat: 40.8300, lng: -73.8400 },
+    "SOUNDVIEW": { lat: 40.8200, lng: -73.8700 },
+    "THROGS NECK": { lat: 40.8184, lng: -73.8213 },
+    "LOCUST POINT": { lat: 40.8200, lng: -73.8200 },
+    "TREMONT": { lat: 40.8500, lng: -73.9000 },
+    "MT. HOPE": { lat: 40.8500, lng: -73.9000 },
+    "UNIVERSITY HEIGHTS": { lat: 40.8622, lng: -73.9134 },
+    "VAN NEST": { lat: 40.8400, lng: -73.8600 },
+    "WAKEFIELD": { lat: 40.8900, lng: -73.8500 },
+    "WESTCHESTER VILLAGE": { lat: 40.8400, lng: -73.8400 },
+    "WESTCHESTER SQUARE": { lat: 40.8400, lng: -73.8400 },
+    "WILLIAMSBRIDGE": { lat: 40.8700, lng: -73.8600 },
+    "WOODLAWN": { lat: 40.8900, lng: -73.8600 },
+    "WOODSTOCK": { lat: 40.8400, lng: -73.8900 },
+
+    // Queens
+    "ASTORIA": { lat: 40.7644, lng: -73.9235 },
+    "DITMARS-STEINWAY": { lat: 40.7750, lng: -73.9093 },
+    "AUBURNDALE": { lat: 40.7600, lng: -73.7900 },
+    "BAYSIDE": { lat: 40.7600, lng: -73.7700 },
+    "BAY TERRACE (QUEENS)": { lat: 40.7800, lng: -73.7800 },
+    "BELLEROSE": { lat: 40.7300, lng: -73.7200 },
+    "BRIARWOOD": { lat: 40.7100, lng: -73.8200 },
+    "BROOKVILLE": { lat: 40.7200, lng: -73.7500 },
+    "CAMBRIA HEIGHTS": { lat: 40.6900, lng: -73.7400 },
+    "CLEARVIEW": { lat: 40.7500, lng: -73.7600 },
+    "COLLEGE POINT": { lat: 40.7800, lng: -73.8500 },
+    "CORONA": { lat: 40.7500, lng: -73.8600 },
+    "DOUGLASTON": { lat: 40.7700, lng: -73.7500 },
+    "EAST ELMHURST": { lat: 40.7600, lng: -73.8700 },
+    "ELMHURST": { lat: 40.7368, lng: -73.8777 },
+    "FLORAL PARK": { lat: 40.7200, lng: -73.7000 },
+    "FLUSHING": { lat: 40.7654, lng: -73.8301 },
+    "EAST FLUSHING": { lat: 40.7700, lng: -73.8300 },
+    "MURRAY HILL (QUEENS)": { lat: 40.7600, lng: -73.8300 },
+    "FOREST HILLS": { lat: 40.7187, lng: -73.8448 },
+    "FRESH MEADOWS": { lat: 40.7400, lng: -73.7800 },
+    "GLEN OAKS": { lat: 40.7500, lng: -73.7200 },
+    "GLENDALE": { lat: 40.7000, lng: -73.8800 },
+    "HILLCREST": { lat: 40.7300, lng: -73.8000 },
+    "HOLLIS": { lat: 40.7100, lng: -73.7600 },
+    "HOWARD BEACH": { lat: 40.6600, lng: -73.8400 },
+    "HAMILTON BEACH": { lat: 40.6500, lng: -73.8300 },
+    "LINDENWOOD": { lat: 40.6600, lng: -73.8500 },
+    "OLD HOWARD BEACH": { lat: 40.6600, lng: -73.8400 },
+    "RAMBLERSVILLE": { lat: 40.7000, lng: -73.8800 },
+    "ROCKWOOD PARK": { lat: 40.7000, lng: -73.8800 },
+    "JACKSON HEIGHTS": { lat: 40.7557, lng: -73.8831 },
+    "JAMAICA": { lat: 40.7000, lng: -73.8000 },
+    "JAMAICA ESTATES": { lat: 40.7200, lng: -73.7800 },
+    "JAMAICA HILLS": { lat: 40.7200, lng: -73.8000 },
+    "KEW GARDENS": { lat: 40.7100, lng: -73.8300 },
+    "KEW GARDENS HILLS": { lat: 40.7300, lng: -73.8200 },
+    "LAURELTON": { lat: 40.6700, lng: -73.7400 },
+    "LITTLE NECK": { lat: 40.7700, lng: -73.7400 },
+    "LONG ISLAND CITY": { lat: 40.7447, lng: -73.9485 },
+    "HUNTERS POINT": { lat: 40.7400, lng: -73.9500 },
+    "MASPETH": { lat: 40.7200, lng: -73.9100 },
+    "MIDDLE VILLAGE": { lat: 40.7200, lng: -73.8800 },
+    "NEW HYDE PARK": { lat: 40.7300, lng: -73.6800 },
+    "NORTH CORONA": { lat: 40.7500, lng: -73.8600 },
+    "OAKLAND GARDENS": { lat: 40.7400, lng: -73.7600 },
+    "OZONE PARK": { lat: 40.6800, lng: -73.8500 },
+    "POMONOK": { lat: 40.7300, lng: -73.8100 },
+    "QUEENS VILLAGE": { lat: 40.7200, lng: -73.7400 },
+    "REGO PARK": { lat: 40.7262, lng: -73.8604 },
+    "RICHMOND HILL": { lat: 40.7000, lng: -73.8300 },
+    "RIDGEWOOD": { lat: 40.7000, lng: -73.9000 },
+    "ROCKAWAY ALL": { lat: 40.5800, lng: -73.8200 },
+    "ARVERNE": { lat: 40.5800, lng: -73.8000 },
+    "BAYSWATER": { lat: 40.6000, lng: -73.7600 },
+    "BELLE HARBOR": { lat: 40.5700, lng: -73.8500 },
+    "BREEZY POINT": { lat: 40.5600, lng: -73.9200 },
+    "BROAD CHANNEL": { lat: 40.6000, lng: -73.8200 },
+    "EDGEMERE": { lat: 40.5900, lng: -73.7700 },
+    "FAR ROCKAWAY": { lat: 40.6000, lng: -73.7500 },
+    "HAMMELS": { lat: 40.5900, lng: -73.8000 },
+    "NEPONSIT": { lat: 40.5700, lng: -73.8600 },
+    "ROCKAWAY PARK": { lat: 40.5800, lng: -73.8400 },
+    "ROSEDALE": { lat: 40.6600, lng: -73.7400 },
+    "SOUTH JAMAICA": { lat: 40.6800, lng: -73.8000 },
+    "SOUTH OZONE PARK": { lat: 40.6700, lng: -73.8200 },
+    "SOUTH RICHMOND HILL": { lat: 40.6900, lng: -73.8200 },
+    "SPRINGFIELD GARDENS": { lat: 40.6700, lng: -73.7600 },
+    "ST. ALBANS": { lat: 40.6900, lng: -73.7600 },
+    "SUNNYSIDE": { lat: 40.7433, lng: -73.9196 },
+    "UTOPIA": { lat: 40.7300, lng: -73.7900 },
+    "WHITESTONE": { lat: 40.7900, lng: -73.8100 },
+    "BEECHHURST": { lat: 40.7800, lng: -73.7800 },
+    "MALBA": { lat: 40.7900, lng: -73.8200 },
+    "WOODHAVEN": { lat: 40.6900, lng: -73.8600 },
+    "WOODSIDE": { lat: 40.7461, lng: -73.9029 },
+
+    // Staten Island
+    "EAST SHORE": { lat: 40.5800, lng: -74.1000 },
+    "ARROCHAR": { lat: 40.6000, lng: -74.0700 },
+    "BAY TERRACE": { lat: 40.6000, lng: -74.0800 },
+    "DONGAN HILLS": { lat: 40.5900, lng: -74.1000 },
+    "EGBERTVILLE": { lat: 40.5800, lng: -74.1200 },
+    "EMERSON HILL": { lat: 40.6000, lng: -74.1000 },
+    "FORT WADSWORTH": { lat: 40.6000, lng: -74.0500 },
+    "GRANT CITY": { lat: 40.5800, lng: -74.1000 },
+    "GRASMERE": { lat: 40.6000, lng: -74.0800 },
+    "LIGHTHOUSE HILL": { lat: 40.5800, lng: -74.1200 },
+    "MIDLAND BEACH": { lat: 40.5700, lng: -74.1000 },
+    "NEW DORP": { lat: 40.5700, lng: -74.1100 },
+    "NEW DORP BEACH": { lat: 40.5700, lng: -74.1100 },
+    "OAKWOOD": { lat: 40.5600, lng: -74.1100 },
+    "OAKWOOD BEACH": { lat: 40.5600, lng: -74.1100 },
+    "OCEAN BREEZE": { lat: 40.5700, lng: -74.1000 },
+    "RICHMONDTOWN": { lat: 40.5700, lng: -74.1500 },
+    "SOUTH BEACH": { lat: 40.5800, lng: -74.0700 },
+    "TODT HILL": { lat: 40.6000, lng: -74.1000 },
+    "MID-ISLAND": { lat: 40.5800, lng: -74.1500 },
+    "BULLS HEAD": { lat: 40.6000, lng: -74.1500 },
+    "CASTLETON CORNERS": { lat: 40.6200, lng: -74.1200 },
+    "GRANITEVILLE": { lat: 40.6200, lng: -74.1500 },
+    "MANOR HEIGHTS": { lat: 40.6000, lng: -74.1000 },
+    "MEIERS CORNERS": { lat: 40.6000, lng: -74.1300 },
+    "NEW SPRINGVILLE": { lat: 40.5894, lng: -74.1585 },
+    "SUNNYSIDE (STATEN ISLAND)": { lat: 40.6200, lng: -74.1000 },
+    "WESTERLEIGH": { lat: 40.6200, lng: -74.1200 },
+    "WILLOWBROOK": { lat: 40.6000, lng: -74.1500 },
+    "NORTH SHORE": { lat: 40.6400, lng: -74.1000 },
+    "ARLINGTON": { lat: 40.6300, lng: -74.0800 },
+    "CLIFTON": { lat: 40.6200, lng: -74.0700 },
+    "ELM PARK": { lat: 40.6300, lng: -74.1300 },
+    "GRYMES HILL": { lat: 40.6300, lng: -74.1000 },
+    "HOWLAND HOOK": { lat: 40.6400, lng: -74.1800 },
+    "MARINERS HARBOR": { lat: 40.6300, lng: -74.1500 },
+    "NEW BRIGHTON": { lat: 40.6400, lng: -74.0900 },
+    "PARK HILL": { lat: 40.6200, lng: -74.0800 },
+    "PORT RICHMOND": { lat: 40.6325, lng: -74.1365 },
+    "ROSEBANK": { lat: 40.6100, lng: -74.0700 },
+    "SAINT GEORGE": { lat: 40.6437, lng: -74.0736 },
+    "SHORE ACRES": { lat: 40.6100, lng: -74.0500 },
+    "SILVER LAKE": { lat: 40.6300, lng: -74.1000 },
+    "STAPLETON": { lat: 40.6200, lng: -74.0800 },
+    "TOMPKINSVILLE": { lat: 40.6400, lng: -74.0700 },
+    "WEST BRIGHTON": { lat: 40.6300, lng: -74.1000 },
+    "SOUTH SHORE": { lat: 40.5500, lng: -74.1500 },
+    "ANNADALE": { lat: 40.5400, lng: -74.1700 },
+    "ARDEN HEIGHTS": { lat: 40.5500, lng: -74.1800 },
+    "CHARLESTON": { lat: 40.5500, lng: -74.2000 },
+    "ELTINGVILLE": { lat: 40.5400, lng: -74.1500 },
+    "GREAT KILLS": { lat: 40.5512, lng: -74.1516 },
+    "GREENRIDGE": { lat: 40.5500, lng: -74.1700 },
+    "HUGUENOT": { lat: 40.5300, lng: -74.2000 },
+    "PLEASANT PLAINS": { lat: 40.5200, lng: -74.2200 },
+    "PRINCES BAY": { lat: 40.5200, lng: -74.2000 },
+    "RICHMOND VALLEY": { lat: 40.5200, lng: -74.2300 },
+    "ROSSVILLE": { lat: 40.5500, lng: -74.2000 },
+    "TOTTENVILLE": { lat: 40.5082, lng: -74.2441 },
+    "WOODROW": { lat: 40.5300, lng: -74.2000 },
+    "WEST SHORE": { lat: 40.6000, lng: -74.2000 },
+    "BLOOMFIELD": { lat: 40.6200, lng: -74.2000 },
+    "CHELSEA (STATEN ISLAND)": { lat: 40.6000, lng: -74.2000 },
+    "TRAVIS": { lat: 40.5900, lng: -74.1900 }
 };
 
 // CORS proxy to fix potential CORS issues
@@ -36,21 +339,14 @@ async function fetchAirQualityData(lat, lng) {
     try {
         console.log(`Fetching data for coordinates: ${lat}, ${lng}`);
         
-        // Always use mock data for now to ensure something displays
-        const mockData = getMockData(lat, lng);
+        // Try to get real data first
+        const realData = await fetchRealData(lat, lng);
+        if (realData) {
+            return realData;
+        }
         
-        // Try to get real data but don't wait for it
-        fetchRealData(lat, lng).then(realData => {
-            if (realData && realData.length > 0) {
-                const airQualityInfo = document.getElementById('air-quality-info');
-                if (airQualityInfo) {
-                    displayAirQualityData(realData, airQualityInfo.getAttribute('data-neighborhood') || 'Selected Neighborhood');
-                }
-            }
-        }).catch(err => console.error('Background real data fetch error:', err));
-        
-        // Return mock data immediately so UI shows something
-        return mockData;
+        // If no real data is available, use mock data
+        return getMockData(lat, lng);
     } catch (error) {
         console.error('Error in fetchAirQualityData:', error);
         return getMockData(lat, lng);
@@ -60,54 +356,53 @@ async function fetchAirQualityData(lat, lng) {
 // Fetch real data in the background
 async function fetchRealData(lat, lng) {
     try {
-        // First try to get the latest measurements with CORS proxy
-        const measurementsUrl = encodeURIComponent(`https://api.openaq.org/v2/latest?coordinates=${lat},${lng}&radius=10000&limit=5`);
-        const proxyUrl = CORS_PROXY + measurementsUrl;
-        
-        console.log(`Trying proxy URL: ${proxyUrl}`);
-        
-        const measurementsResponse = await fetch(proxyUrl);
-        const measurementsData = await measurementsResponse.json();
-        
-        console.log("Measurements API Response:", measurementsData);
-        
-        // Process measurements data if available
-        if (measurementsData.results && measurementsData.results.length > 0) {
-            // Format the data for display
-            return processApiData(measurementsData.results);
+        // First, get the monitoring station closest to the coordinates
+        const stationResponse = await fetch(`https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=10001&distance=25&API_KEY=3C1EB5BC-2945-40F4-B8A0-1D89518470E0`);
+        const stations = await stationResponse.json();
+
+        if (stations && stations.length > 0) {
+            // Find the station closest to our coordinates
+            const closestStation = stations.reduce((closest, current) => {
+                const currentDist = Math.sqrt(
+                    Math.pow(current.Latitude - lat, 2) + 
+                    Math.pow(current.Longitude - lng, 2)
+                );
+                const closestDist = Math.sqrt(
+                    Math.pow(closest.Latitude - lat, 2) + 
+                    Math.pow(closest.Longitude - lng, 2)
+                );
+                return currentDist < closestDist ? current : closest;
+            });
+
+            // Get detailed observations for the closest station
+            const obsResponse = await fetch(`https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=${closestStation.Latitude}&longitude=${closestStation.Longitude}&distance=25&API_KEY=3C1EB5BC-2945-40F4-B8A0-1D89518470E0`);
+            const observations = await obsResponse.json();
+
+            if (observations && observations.length > 0) {
+                const pm25 = observations.find(o => o.ParameterName === 'PM2.5');
+                const pm10 = observations.find(o => o.ParameterName === 'PM10');
+                const o3 = observations.find(o => o.ParameterName === 'OZONE');
+                const no2 = observations.find(o => o.ParameterName === 'NO2');
+
+                return {
+                    aqi: pm25 ? pm25.AQI : 0,
+                    category: pm25 ? pm25.Category.Name : "No Data",
+                    pm25: pm25 ? `${pm25.Concentration.toFixed(1)} µg/m³` : "No Data",
+                    pm10: pm10 ? `${pm10.Concentration.toFixed(1)} µg/m³` : "No Data",
+                    o3: o3 ? `${o3.Concentration.toFixed(3)} ppm` : "No Data",
+                    no2: no2 ? `${no2.Concentration.toFixed(1)} µg/m³` : "No Data",
+                    source: "AirNow",
+                    lastUpdated: observations[0].DateObserved + " " + observations[0].HourObserved + ":00"
+                };
+            }
         }
-        
+
+        // If no data is available, return null to indicate no data
         return null;
     } catch (error) {
-        console.error('Error fetching real data:', error);
+        console.error('Error fetching air quality data:', error);
         return null;
     }
-}
-
-// Process API data
-function processApiData(results) {
-    return results.map(location => {
-        // Extract parameters from measurements
-        const parameters = [];
-        if (location.measurements) {
-            location.measurements.forEach(measurement => {
-                parameters.push({
-                    parameter: measurement.parameter,
-                    lastValue: measurement.value,
-                    unit: measurement.unit
-                });
-            });
-        }
-        
-        return {
-            name: location.location,
-            parameters: parameters,
-            sourceName: location.entity || 'OpenAQ',
-            lastUpdated: location.measurements && location.measurements.length > 0 
-                ? location.measurements[0].lastUpdated 
-                : new Date().toISOString()
-        };
-    });
 }
 
 // Get mock data with coordinates to make it feel like real data

@@ -14,17 +14,6 @@ const getColor = (aqi) => {
     return ['#ff0000', '#cc0000'];
 };
 
-// Function to create gradient style
-const createGradientStyle = (colors) => {
-    return {
-        fillColor: colors[0],
-        color: colors[1],
-        weight: 1,
-        opacity: 0.8,
-        fillOpacity: 0.35
-    };
-};
-
 // Function to fetch real air quality data from AirNow API
 async function fetchAirQualityData(neighborhood, coords) {
     try {
@@ -194,17 +183,37 @@ async function createPopupContent(neighborhood) {
     `;
 }
 
-// Function to update map background
+// Function to update or create the gradient overlay
+function updateGradientOverlay(aqi) {
+    let overlay = document.getElementById('gradient-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'gradient-overlay';
+        overlay.style.position = 'absolute';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.right = '0';
+        overlay.style.bottom = '0';
+        overlay.style.width = '100vw';
+        overlay.style.height = '100vh';
+        overlay.style.pointerEvents = 'none';
+        overlay.style.zIndex = '1001'; // Above map, below info panel
+        overlay.style.mixBlendMode = 'normal';
+        document.body.appendChild(overlay);
+    }
+    overlay.style.background = createGradientStyle(aqi);
+    overlay.style.opacity = '1'; // Fully opaque, map not visible
+}
+
+// Update updateMapBackground to also update the gradient overlay
 function updateMapBackground(aqi) {
     const mapOverlay = document.querySelector('.map-overlay');
-    if (!mapOverlay) return;
-    
-    // Remove all existing classes
-    mapOverlay.className = 'map-overlay';
-    
-    // Add the appropriate class based on AQI
-    const category = getAQICategory(aqi);
-    mapOverlay.classList.add(category);
+    if (mapOverlay) {
+        mapOverlay.className = 'map-overlay';
+        const category = getAQICategory(aqi);
+        mapOverlay.classList.add(category);
+    }
+    updateGradientOverlay(aqi);
 }
 
 // Function to update air quality info panel
@@ -217,10 +226,6 @@ async function updateAirQualityInfo(neighborhood) {
     
     try {
         const data = await getAQIForNeighborhood(neighborhood);
-        
-        // Update the map background based on AQI
-        updateMapBackground(data.aqi);
-        
         document.getElementById('aqi-value').textContent = data.aqi;
         document.getElementById('aqi-category').textContent = data.category;
         document.getElementById('pm25-value').textContent = data.pm25;
@@ -232,29 +237,11 @@ async function updateAirQualityInfo(neighborhood) {
         document.getElementById('monitor-location').textContent = `Data from nearest monitoring station`;
     } catch (error) {
         console.error('Error updating air quality info:', error);
-        // Set default background when no data is available
-        updateMapBackground(null); // This will set the default background
         document.getElementById('monitor-location').textContent = 'No data available';
     }
 }
 
-// --- Normalization utility ---
-function normalizeCoord(lat, lng) {
-    // Estimated tighter/shifted fit for the drawn map area
-    const minLat = 40.54, maxLat = 40.85;
-    const minLng = -74.20, maxLng = -73.75;
-    const margin = 0.05;
-    const latRange = maxLat - minLat;
-    const lngRange = maxLng - minLng;
-    const y = (lat - minLat) / latRange;
-    const x = (lng - minLng) / lngRange;
-    // Shift all points downward by 5% (correct direction)
-    const newY = margin + y * (1 - 2 * margin) - 0.05;
-    const newX = margin + x * (1 - 2 * margin);
-    const normLat = minLat + newY * latRange;
-    const normLng = minLng + newX * lngRange;
-    return { lat: normLat, lng: normLng };
-}
+let glowMarker = null; // Store the current glow marker
 
 function addNeighborhoodsToMap() {
     console.log('Adding neighborhoods to map...');
@@ -266,8 +253,7 @@ function addNeighborhoodsToMap() {
     console.log('Neighborhood coordinates:', window.neighborhoodCoordinates);
     
     Object.entries(window.neighborhoodCoordinates).forEach(([neighborhood, coords]) => {
-        // Normalize the coordinates
-        const norm = normalizeCoord(coords.lat, coords.lng);
+        // Use real coordinates directly
         const minimalIcon = L.divIcon({
             className: 'minimal-marker',
             html: '•',
@@ -275,29 +261,45 @@ function addNeighborhoodsToMap() {
             iconAnchor: [5, 5]
         });
         
-        const marker = L.marker([norm.lat, norm.lng], { icon: minimalIcon })
+        const marker = L.marker([coords.lat, coords.lng], { icon: minimalIcon })
             .addTo(map);
-            
-        // Set up popup with loading state
-        marker.bindPopup('Loading air quality data...');
         
-        // Update popup content when clicked
         marker.on('click', async () => {
             try {
-                const popupContent = await createPopupContent(neighborhood);
-                marker.setPopupContent(popupContent);
                 await updateAirQualityInfo(neighborhood);
+                const aqi = (await getAQIForNeighborhood(neighborhood))?.aqi || 0;
+                showGlowMarker([coords.lat, coords.lng], aqi);
             } catch (error) {
-                console.error('Error updating popup:', error);
-                marker.setPopupContent(`
-                    <div class="neighborhood-popup">
-                        <h3>${neighborhood}</h3>
-                        <p>Error loading air quality data</p>
-                    </div>
-                `);
+                console.error('Error updating air quality info:', error);
             }
         });
     });
+    // Remove glow when clicking elsewhere on the map
+    map.on('click', removeGlowMarker);
+}
+
+// Show a glow marker at the given latlng with color based on AQI
+function showGlowMarker(latlng, aqi) {
+    removeGlowMarker(); // Remove any existing glow marker
+    let glowClass = 'marker-glow-good';
+    if (aqi <= 50) glowClass = 'marker-glow-good';
+    else if (aqi <= 100) glowClass = 'marker-glow-moderate';
+    else if (aqi <= 150) glowClass = 'marker-glow-unhealthy';
+    else glowClass = 'marker-glow-veryunhealthy';
+    const glowIcon = L.divIcon({
+        className: `marker-glow-icon ${glowClass}`,
+        iconSize: [120, 120],
+        iconAnchor: [60, 60],
+        html: `<div></div>`
+    });
+    glowMarker = L.marker(latlng, { icon: glowIcon, interactive: false }).addTo(map);
+}
+
+function removeGlowMarker() {
+    if (glowMarker) {
+        map.removeLayer(glowMarker);
+        glowMarker = null;
+    }
 }
 
 // Initialize map when the DOM is loaded
@@ -329,25 +331,29 @@ document.addEventListener('DOMContentLoaded', () => {
         maxBoundsViscosity: 1.0
     });
 
-    // Add static map image with slightly larger bounds
-    const mapImage = L.imageOverlay('img/map2.png', [
-        [40.49, -74.28], // Southwest corner (slightly larger)
-        [40.90, -73.66]  // Northeast corner (slightly larger)
-    ], {
-        opacity: 1,
-        interactive: true
+    // Add Mapbox tile layer as the base
+    L.tileLayer('https://api.mapbox.com/styles/v1/leed376/cma09txuf01gk01s5cpw8ctqk/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibGVlZDM3NiIsImEiOiJjbTltOWozaDgwY3Q0MmlvOGNja2Vhc3VoIn0.C-yU24sY4s_oEPrlKuzfnA', {
+        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        tileSize: 256,
+        zoomOffset: 0,
+        minZoom: 10,
+        maxZoom: 18,
+        accessToken: 'pk.eyJ1IjoibGVlZDM3NiIsImEiOiJjbTltOWozaDgwY3Q0MmlvOGNja2Vhc3VoIn0.C-yU24sY4s_oEPrlKuzfnA'
     }).addTo(map);
 
     // Set the view to fit the image bounds
-    map.fitBounds([
-        [40.49, -74.28],
-        [40.90, -73.66]
-    ]);
+    // map.fitBounds([
+    //     [40.49, -74.28],
+    //     [40.90, -73.66]
+    // ]);
 
     console.log('Map initialized, adding neighborhoods...');
     
     // Add neighborhood markers
     addNeighborhoodsToMap();
+    
+    // After adding neighborhoods to map, add the test marker
+    addTestMarker();
     
     // Force a resize event to ensure the map tiles load properly
     setTimeout(() => {

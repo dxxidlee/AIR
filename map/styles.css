@@ -26,58 +26,34 @@ body {
     transition: background 0.5s ease;
     mix-blend-mode: normal;
     opacity: 1;
-    background: radial-gradient(circle at center, 
-        hsl(115, 100%, 50%) 0%,
-        hsl(315, 100%, 50%) 100%);
 }
 
 /* Dynamic background classes based on AQI */
 .map-overlay.good {
-    background: radial-gradient(circle at center, 
-        hsl(115, 100%, 50%) 0%,
-        hsl(315, 100%, 50%) 100%);
     mix-blend-mode: normal;
 }
 
 .map-overlay.moderate {
-    background: radial-gradient(circle at center,
-        hsl(60, 100%, 50%) 0%,
-        hsl(240, 100%, 50%) 100%);
     mix-blend-mode: normal;
 }
 
 .map-overlay.unhealthy-sensitive {
-    background: radial-gradient(circle at center,
-        hsl(30, 100%, 50%) 0%,
-        hsl(210, 100%, 50%) 100%);
     mix-blend-mode: normal;
 }
 
 .map-overlay.unhealthy {
-    background: radial-gradient(circle at center,
-        hsl(0, 100%, 50%) 0%,
-        hsl(180, 100%, 50%) 100%);
     mix-blend-mode: normal;
 }
 
 .map-overlay.very-unhealthy {
-    background: radial-gradient(circle at center,
-        hsl(0, 100%, 30%) 0%,
-        hsl(180, 100%, 30%) 100%);
     mix-blend-mode: normal;
 }
 
 .map-overlay.hazardous {
-    background: radial-gradient(circle at center,
-        hsl(0, 100%, 20%) 0%,
-        hsl(180, 100%, 20%) 100%);
     mix-blend-mode: normal;
 }
 
 .map-overlay.default {
-    background: radial-gradient(circle at center,
-        hsl(0, 0%, 50%) 0%,
-        hsl(0, 0%, 20%) 100%);
     mix-blend-mode: normal;
 }
 
@@ -103,8 +79,8 @@ body {
 
 /* Style the map tiles */
 .leaflet-tile {
-    filter: brightness(0.5) contrast(0.5) !important;
-    opacity: 0.5;
+    filter: none !important;
+    opacity: 1;
 }
 
 .leaflet-marker-icon {
@@ -121,63 +97,15 @@ body {
     mix-blend-mode: normal;
 }
 
-.legend {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    background-color: white;
-    padding: 10px;
-    border-radius: 5px;
-    color: black;
-    z-index: 2;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    font-family: 'Air', Arial, sans-serif;
-    border: 2px solid black;
-}
-
-.legend h3 {
-    margin: 0 0 10px 0;
-    font-size: 14px;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.color-box {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    border-radius: 3px;
-}
-
-.good {
-    background: linear-gradient(45deg, #00e400, #00c400);
-}
-
-.moderate {
-    background: linear-gradient(45deg, #ffff00, #ffd700);
-}
-
-.unhealthy-sensitive {
-    background: linear-gradient(45deg, #ff7e00, #ff5e00);
-}
-
-.unhealthy {
-    background: linear-gradient(45deg, #ff0000, #cc0000);
-}
-
 #air-quality-info {
     position: absolute;
     top: 20px;
-    left: 20px;
+    right: 20px;
     background-color: white;
     padding: 20px;
     border-radius: 5px;
     color: black;
-    z-index: 2;
+    z-index: 2000;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     width: 300px;
     display: none;
@@ -274,4 +202,23 @@ body {
 .leaflet-popup-tip {
     background: white;
     border: 2px solid black;
+}
+
+.marker-glow-icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+.marker-glow-good {
+    background: radial-gradient(circle at center, hsl(115,100%,50%) 0%, hsla(115,100%,50%,0) 70%);
+}
+.marker-glow-moderate {
+    background: radial-gradient(circle at center, hsl(60,100%,50%) 0%, hsla(60,100%,50%,0) 70%);
+}
+.marker-glow-unhealthy {
+    background: radial-gradient(circle at center, hsl(30,100%,50%) 0%, hsla(30,100%,50%,0) 70%);
+}
+.marker-glow-veryunhealthy {
+    background: radial-gradient(circle at center, hsl(0,100%,50%) 0%, hsla(0,100%,50%,0) 70%);
 }

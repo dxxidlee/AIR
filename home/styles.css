@@ -43,7 +43,7 @@ body::after {
     display: none !important;
 }
 
-.language-selector {
+.map-selector, .chat-selector {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -52,9 +52,29 @@ body::after {
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
     z-index: 2;
     mix-blend-mode: normal;
+    border: 2px solid black;
+    width: 50px;
+    height: 10px;
+}
+
+.map-selector a, .chat-selector a {
+    color: black;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.map-selector a:hover, .chat-selector a:hover {
+    opacity: 0.7;
+}
+
+.chat-selector {
+    top: 38.5px;
 }
 
 .logo-container {

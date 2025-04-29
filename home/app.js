@@ -343,7 +343,7 @@ async function fetchAirQualityData(lat, lng) {
         const realData = await fetchRealData(lat, lng);
         if (realData) {
             return realData;
-        }
+                }
         
         // If no real data is available, use mock data
         return getMockData(lat, lng);

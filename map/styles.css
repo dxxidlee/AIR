@@ -5,6 +5,9 @@ body {
     background-color: #000;
     min-height: 100vh;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #map {
@@ -61,7 +64,7 @@ body {
 .map-container {
     position: relative;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
     background: transparent;
 }
@@ -255,4 +258,86 @@ body {
 
 .chat-selector {
     top: 38.5px;
+}
+
+.circle-container {
+    position: relative;
+    width: 80vh;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: white;
+    box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.8);
+}
+
+.inner-circle {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background: black;
+    border: 2px solid white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+}
+
+.dashed-circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+.dashed-circle-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.triangle-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.triangle-left, .triangle-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
+    z-index: 1001;
+}
+
+.triangle-left {
+    left: 20px;
+    border-right: 30px solid white;
+}
+
+.triangle-right {
+    right: 20px;
+    border-left: 30px solid white;
+}
+
+.triangle-left:hover, .triangle-right:hover {
+    opacity: 0.8;
 }

@@ -16,9 +16,23 @@
     </style>
 </head>
 <body>
-    <div class="map-container">
-        <div id="map"></div>
-        <div class="map-overlay"></div>
+    <div class="circle-container">
+        <div class="circle">
+            <div class="map-container">
+                <div id="map"></div>
+                <div class="map-overlay"></div>
+            </div>
+        </div>
+        <div class="inner-circle"></div>
+        <div class="dashed-circle">
+            <svg class="dashed-circle-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2,2"/>
+            </svg>
+        </div>
+        <div class="triangle-container">
+            <div class="triangle-left"></div>
+            <div class="triangle-right"></div>
+        </div>
     </div>
     <div class="map-selector">
         <a href="https://dxxidlee.github.io/AIRNY/home/" target="_blank">HOME</a>

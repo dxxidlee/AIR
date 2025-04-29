@@ -302,32 +302,38 @@ function removeGlowMarker() {
     }
 }
 
+let currentRotation = 0;
+let currentCircleIndex = 0;
+let firstClickDone = false;
+
+// Define borough coordinates and zoom levels
+const boroughCoordinates = {
+    'Manhattan': { center: [40.7831, -73.9712], zoom: 13 },
+    'Brooklyn': { center: [40.6782, -73.9442], zoom: 13 },
+    'Queens': { center: [40.7282, -73.7949], zoom: 13 },
+    'Bronx': { center: [40.8448, -73.8648], zoom: 13 },
+    'Staten Island': { center: [40.5795, -74.1502], zoom: 13 },
+    'Air Quality': { center: [40.7128, -74.0060], zoom: 11 },
+    'Weather': { center: [40.7128, -74.0060], zoom: 11 },
+    'About': { center: [40.7128, -74.0060], zoom: 11 }
+};
+
 // Initialize map when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing map...');
     
-    // Check if map container exists
-    const mapContainer = document.getElementById('map');
-    if (!mapContainer) {
-        console.error('Map container not found!');
-        return;
-    }
-    
-    // Define NYC bounds
-    const nycBounds = L.latLngBounds(
-        L.latLng(40.4774, -74.2591), // Southwest corner (Staten Island)
-        L.latLng(40.9176, -73.7004)  // Northeast corner (Bronx)
-    );
-    
-    // Initialize the map centered on New York City
+    // Initialize the map centered on Manhattan
     map = L.map('map', {
-        center: [40.7128, -74.0060],
-        zoom: 11,
-        minZoom: 10,
+        center: [40.7831, -73.9712], // Manhattan center
+        zoom: 13,
+        minZoom: 11,
         maxZoom: 18,
-        zoomControl: true,
+        zoomControl: false, // Disable zoom controls
         attributionControl: false,
-        maxBounds: nycBounds,
+        maxBounds: L.latLngBounds(
+            L.latLng(40.4774, -74.2591), // Southwest corner (Staten Island)
+            L.latLng(40.9176, -73.7004)  // Northeast corner (Bronx)
+        ),
         maxBoundsViscosity: 1.0
     });
 
@@ -336,16 +342,18 @@ document.addEventListener('DOMContentLoaded', () => {
         attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         tileSize: 256,
         zoomOffset: 0,
-        minZoom: 10,
+        minZoom: 11,
         maxZoom: 18,
         accessToken: 'pk.eyJ1IjoibGVlZDM3NiIsImEiOiJjbTltOWozaDgwY3Q0MmlvOGNja2Vhc3VoIn0.C-yU24sY4s_oEPrlKuzfnA'
     }).addTo(map);
 
-    // Set the view to fit the image bounds
-    // map.fitBounds([
-    //     [40.49, -74.28],
-    //     [40.90, -73.66]
-    // ]);
+    // Disable map dragging and touch interactions
+    map.dragging.disable();
+    map.touchZoom.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
+    map.keyboard.disable();
+    map.boxZoom.disable();
 
     console.log('Map initialized, adding neighborhoods...');
     
@@ -359,4 +367,76 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         map.invalidateSize();
     }, 100);
+
+    // Add click handlers for the circular interface
+    const innerCircle = document.querySelector('.inner-circle');
+    const triangleLeft = document.querySelector('.triangle-left');
+    const triangleRight = document.querySelector('.triangle-right');
+    const dashedCircle = document.querySelector('.dashed-circle');
+
+    // Make sure the arrows are visible by default
+    triangleLeft.style.visibility = 'visible';
+    triangleRight.style.visibility = 'visible';
+
+    // Set firstClickDone to true by default
+    firstClickDone = true;
+
+    innerCircle.addEventListener('click', () => {
+        console.log('Inner circle clicked');
+        if (!firstClickDone) {
+            firstClickDone = true;
+            innerCircle.style.visibility = 'visible';
+            document.querySelectorAll('.triangle-left, .triangle-right').forEach(el => {
+                el.style.visibility = 'visible';
+            });
+        }
+    });
+
+    triangleLeft.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event bubbling
+        console.log('Left arrow clicked');
+        currentRotation -= 45;
+        dashedCircle.style.transform = `rotate(${currentRotation}deg)`;
+        currentCircleIndex = (currentCircleIndex - 1 + 8) % 8;
+        updateContent();
+    });
+
+    triangleRight.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event bubbling
+        console.log('Right arrow clicked');
+        currentRotation += 45;
+        dashedCircle.style.transform = `rotate(${currentRotation}deg)`;
+        currentCircleIndex = (currentCircleIndex + 1) % 8;
+        updateContent();
+    });
 });
+
+function updateContent() {
+    console.log('Updating content, current index:', currentCircleIndex);
+    // Update content based on currentCircleIndex
+    const sections = [
+        'Manhattan',
+        'Brooklyn',
+        'Queens',
+        'Bronx',
+        'Staten Island',
+        'Air Quality',
+        'Weather',
+        'About'
+    ];
+    
+    // Update the content based on the current section
+    const content = document.getElementById('air-quality-info');
+    content.querySelector('h2').textContent = sections[currentCircleIndex];
+
+    // Zoom to the selected borough
+    const selectedBorough = sections[currentCircleIndex];
+    const coords = boroughCoordinates[selectedBorough];
+    if (coords) {
+        console.log('Updating map view to:', coords);
+        map.setView(coords.center, coords.zoom, {
+            animate: true,
+            duration: 1
+        });
+    }
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>AIRNY</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+        <link rel="icon" type="image/x-icon" href="../map/img/favicon.ico">
+        <style>
+            @font-face {
+                font-family: 'Air';
+                src: url('../map/ABCFavoritExpanded-Bold-Trial.otf') format('opentype');
+            }
+        </style>
+    </head>
+    <body>
+        <div class="decorative-text top-left">AIR QUALITY MONITORING</div>
+        <div class="decorative-text top-right">REAL-TIME DATA</div>
+        <div class="decorative-text bottom-left">ENVIRONMENTAL AWARENESS</div>
+        <div class="decorative-text bottom-right">CLEAN AIR INITIATIVE</div>
+        <div class="decorative-text center-left">NYC AIR QUALITY</div>
+        <div class="decorative-text center-right">AIR POLLUTION</div>
+        
+        <div class="chat-container">
+            <div class="chat-header">
+                <h1>AIRNY Chat</h1>
+                <div class="nav-buttons">
+                    <a href="../map/" class="nav-button">MAP</a>
+                    <a href="../home/" class="nav-button">HOME</a>
+                </div>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="message-input" placeholder="Type your message..." autocomplete="off">
+                <button id="send-button">Send</button>
+            </div>
+        </div>
+        <script src="app.js"></script>
+    </body>
+</html>

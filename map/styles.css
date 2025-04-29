@@ -8,6 +8,65 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: background 0.5s ease;
+    position: relative;
+}
+
+/* Default gradient */
+body {
+    background: radial-gradient(circle at center, hsl(115, 100%, 50%) 0%, hsl(315, 100%, 50%) 100%);
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.05;
+    background-image: url('img/grain.jpg');
+    background-size: cover;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    z-index: 1;
+}
+
+/* Gradient background classes */
+body.good {
+    background: radial-gradient(circle at center, hsl(115, 100%, 50%) 0%, hsl(315, 100%, 50%) 100%);
+}
+
+body.moderate {
+    background: radial-gradient(circle at center, hsl(60, 100%, 50%) 0%, hsl(240, 100%, 50%) 100%);
+}
+
+body.unhealthy-sensitive {
+    background: radial-gradient(circle at center, hsl(30, 100%, 50%) 0%, hsl(210, 100%, 50%) 100%);
+}
+
+body.unhealthy {
+    background: radial-gradient(circle at center, hsl(0, 100%, 50%) 0%, hsl(180, 100%, 50%) 100%);
+}
+
+body.very-unhealthy {
+    background: radial-gradient(circle at center, hsl(300, 100%, 50%) 0%, hsl(120, 100%, 50%) 100%);
+}
+
+body.hazardous {
+    background: radial-gradient(circle at center, hsl(0, 100%, 30%) 0%, hsl(180, 100%, 30%) 100%);
+}
+
+.map-container {
+    position: relative;
+    width: 80vh;
+    height: 80vh;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+    border: 2px solid white;
 }
 
 #map {
@@ -15,7 +74,9 @@ body {
     top: 0;
     bottom: 0;
     width: 100%;
+    height: 100%;
     z-index: 2;
+    background: transparent;
 }
 
 .map-overlay {
@@ -60,18 +121,29 @@ body {
     mix-blend-mode: normal;
 }
 
-/* Update the map container to be relative */
-.map-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: transparent;
-}
-
-/* Ensure map tiles don't block the overlay */
+/* Ensure map tiles and controls are visible but clipped */
 .leaflet-container {
     background: transparent !important;
+    clip-path: circle(50% at 50% 50%);
+}
+
+.leaflet-control-container {
+    z-index: 1000;
+}
+
+.leaflet-control-zoom {
+    border: 2px solid white !important;
+    background: transparent !important;
+}
+
+.leaflet-control-zoom a {
+    background-color: white !important;
+    color: black !important;
+    border: none !important;
+}
+
+.leaflet-control-zoom a:hover {
+    background-color: rgba(255, 255, 255, 0.8) !important;
 }
 
 /* Style the map image */
@@ -101,18 +173,123 @@ body {
 }
 
 #air-quality-info {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
-    right: 10px;
-    background-color: white;
-    padding: 20px;
-    color: black;
-    z-index: 2000;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    left: 20px;
     width: 300px;
-    display: none;
-    font-family: 'Air', Arial, sans-serif;
-    border: 2px solid black;
+    max-width: 300px;
+    background-color: transparent;
+    color: black;
+    padding: 20px;
+    font-family: 'Air', sans-serif;
+    z-index: 1999;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#air-quality-info.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+#air-quality-info .info-logo {
+    width: 100%;
+    max-width: 200%;
+    height: auto;
+    margin-bottom: -20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#air-quality-info.visible .info-logo {
+    opacity: 1;
+}
+
+#air-quality-info h2,
+#air-quality-info p,
+#air-quality-info .aqi-container,
+#air-quality-info .parameters {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-align: center;
+}
+
+#air-quality-info.visible h2,
+#air-quality-info.visible p,
+#air-quality-info.visible .aqi-container,
+#air-quality-info.visible .parameters {
+    opacity: 1;
+}
+
+#air-quality-info .parameter,
+#air-quality-info .data-source,
+#air-quality-info .last-updated {
+    transition-delay: 0s;
+    text-align: center;
+}
+
+#air-quality-info h2 {
+    margin-top: 0;
+    font-size: 20px;
+    letter-spacing: -.5px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#air-quality-info .location-name {
+    font-size: 16px;
+    margin-bottom: 15px;
+    letter-spacing: -.5px;
+    text-align: center;
+}
+
+#air-quality-info .aqi-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#air-quality-info .aqi-value {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+#air-quality-info .aqi-category {
+    font-size: 14px;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+#air-quality-info .parameters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+#air-quality-info .parameter {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 3px solid black;
+    padding-bottom: 5px;
+    width: 100%;
+    text-align: center;
+}
+
+#air-quality-info .param-name {
+    font-weight: bold;
+    text-align: center;
 }
 
 .info-logo {
@@ -126,14 +303,15 @@ body {
 }
 
 #neighborhood-name {
-    margin: 0 0 10px 0;
+    margin: 0 0 0px 0;
     font-size: 20px;
+    margin-top: 100px;
 }
 
 #monitor-location {
     margin: 0 0 15px 0;
     font-size: 14px;
-    color: #ccc;
+    color: black;
 }
 
 .aqi-container {
@@ -150,7 +328,7 @@ body {
 
 #aqi-category {
     font-size: 16px;
-    color: #ccc;
+    color: black;
 }
 
 .parameters {
@@ -165,7 +343,7 @@ body {
 }
 
 .param-name {
-    color: #ccc;
+    color: black;
 }
 
 .param-value {
@@ -174,8 +352,10 @@ body {
 
 .data-source, .last-updated {
     font-size: 12px;
-    color: #999;
+    color: black;
     margin: 5px 0;
+    text-align: center;
+    width: 100%;
 }
 
 .neighborhood-popup {
@@ -186,12 +366,12 @@ body {
 
 .neighborhood-popup h3 {
     margin: 0 0 5px 0;
-    color: #333;
+    color: black;
 }
 
 .neighborhood-popup p {
     margin: 5px 0;
-    color: #666;
+    color: black;
 }
 
 /* Update popup styles */
@@ -226,10 +406,9 @@ body {
 }
 
 .map-selector, .chat-selector {
-    background-color: white;
     position: absolute;
     top: 10px;
-    right: 10px;
+    left: 10px;
     padding: 5px 10px;
     font-size: 12px;
     cursor: pointer;

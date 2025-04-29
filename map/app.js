@@ -143,7 +143,7 @@ async function getAQIForNeighborhood(neighborhood) {
 
 // Function to get AQI category
 function getAQICategory(aqi) {
-    if (!aqi) return "default";
+    if (!aqi) return "";
     if (aqi <= 50) return "good";
     if (aqi <= 100) return "moderate";
     if (aqi <= 150) return "unhealthy-sensitive";
@@ -220,6 +220,10 @@ function updateMapBackground(aqi) {
 async function updateAirQualityInfo(neighborhood) {
     const infoPanel = document.getElementById('air-quality-info');
     infoPanel.style.display = 'block';
+    // Trigger reflow
+    infoPanel.offsetHeight;
+    // Add visible class for transition
+    infoPanel.classList.add('visible');
     
     document.getElementById('neighborhood-name').textContent = neighborhood;
     document.getElementById('monitor-location').textContent = 'Loading data...';
@@ -234,12 +238,31 @@ async function updateAirQualityInfo(neighborhood) {
         document.getElementById('no2-value').textContent = data.no2;
         document.getElementById('data-source').textContent = 'Source: OpenAQ';
         document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleString()}`;
-        document.getElementById('monitor-location').textContent = `Data from nearest monitoring station`;
+        document.getElementById('monitor-location').style.display = 'none';
+
+        // Update background based on AQI
+        const category = getAQICategory(data.aqi);
+        document.body.className = ''; // Remove all classes
+        document.body.classList.add(category);
     } catch (error) {
         console.error('Error updating air quality info:', error);
-        document.getElementById('monitor-location').textContent = 'No data available';
+        document.getElementById('monitor-location').style.display = 'none';
+        document.body.className = ''; // Reset to default gradient
     }
 }
+
+// Add click handler to close info panel when clicking outside
+document.addEventListener('click', function(e) {
+    const airQualityInfo = document.getElementById('air-quality-info');
+    if (!e.target.closest('#air-quality-info') && !e.target.closest('.leaflet-marker-icon')) {
+        if (airQualityInfo) {
+            airQualityInfo.classList.remove('visible');
+            setTimeout(() => {
+                airQualityInfo.style.display = 'none';
+            }, 300); // Match the transition duration
+        }
+    }
+});
 
 let glowMarker = null; // Store the current glow marker
 
@@ -328,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zoom: 13,
         minZoom: 11,
         maxZoom: 18,
-        zoomControl: false, // Disable zoom controls
+        zoomControl: true, // Enable zoom controls
         attributionControl: false,
         maxBounds: L.latLngBounds(
             L.latLng(40.4774, -74.2591), // Southwest corner (Staten Island)
@@ -338,22 +361,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Add Mapbox tile layer as the base
-    L.tileLayer('https://api.mapbox.com/styles/v1/leed376/cma09txuf01gk01s5cpw8ctqk/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibGVlZDM3NiIsImEiOiJjbTltOWozaDgwY3Q0MmlvOGNja2Vhc3VoIn0.C-yU24sY4s_oEPrlKuzfnA', {
+    L.tileLayer('https://api.mapbox.com/styles/v1/leed376/cma2vgc2j003001qp7gxgdun7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibGVlZDM3NiIsImEiOiJjbTltOWozaDgwY3Q0MmlvOGNja2Vhc3VoIn0.C-yU24sY4s_oEPrlKuzfnA', {
         attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         tileSize: 256,
         zoomOffset: 0,
         minZoom: 11,
-        maxZoom: 18,
-        accessToken: 'pk.eyJ1IjoibGVlZDM3NiIsImEiOiJjbTltOWozaDgwY3Q0MmlvOGNja2Vhc3VoIn0.C-yU24sY4s_oEPrlKuzfnA'
+        maxZoom: 18
     }).addTo(map);
 
-    // Disable map dragging and touch interactions
-    map.dragging.disable();
-    map.touchZoom.disable();
-    map.doubleClickZoom.disable();
-    map.scrollWheelZoom.disable();
-    map.keyboard.disable();
-    map.boxZoom.disable();
+    // Enable all map interactions
+    map.dragging.enable();
+    map.touchZoom.enable();
+    map.doubleClickZoom.enable();
+    map.scrollWheelZoom.enable();
+    map.keyboard.enable();
+    map.boxZoom.enable();
+
+    // Add event listener to keep map within bounds
+    map.on('moveend', function() {
+        const bounds = map.getBounds();
+        const maxBounds = L.latLngBounds(
+            L.latLng(40.4774, -74.2591),
+            L.latLng(40.9176, -73.7004)
+        );
+        
+        if (!maxBounds.contains(bounds)) {
+            map.setView([40.7831, -73.9712], map.getZoom());
+        }
+    });
 
     console.log('Map initialized, adding neighborhoods...');
     
@@ -366,6 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Force a resize event to ensure the map tiles load properly
     setTimeout(() => {
         map.invalidateSize();
+        map.setView([40.7831, -73.9712], 13);
     }, 100);
 
     // Add click handlers for the circular interface

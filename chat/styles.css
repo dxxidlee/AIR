@@ -12,50 +12,6 @@ body {
     overflow: hidden;
 }
 
-.decorative-text {
-    position: absolute;
-    color: rgba(255, 255, 255, 0.1);
-    font-size: 24px;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 0;
-}
-
-.decorative-text.top-left {
-    top: 20px;
-    left: 20px;
-    transform: rotate(-15deg);
-}
-
-.decorative-text.top-right {
-    top: 20px;
-    right: 20px;
-    transform: rotate(15deg);
-}
-
-.decorative-text.bottom-left {
-    bottom: 20px;
-    left: 20px;
-    transform: rotate(15deg);
-}
-
-.decorative-text.bottom-right {
-    bottom: 20px;
-    right: 20px;
-    transform: rotate(-15deg);
-}
-
-.decorative-text.center-left {
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%) rotate(-90deg);
-}
-
-.decorative-text.center-right {
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%) rotate(90deg);
-}
 
 .chat-container {
     width: 90%;
@@ -76,12 +32,21 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 40px;
+    overflow: hidden;
 }
 
 .chat-header h1 {
     margin: 0;
     font-size: 24px;
     letter-spacing: -0.5px;
+}
+
+.chat-header .logo {
+    height: 60px;
+    width: auto;
+    filter: invert(1);
+    margin-top: -10px;
 }
 
 .nav-buttons {

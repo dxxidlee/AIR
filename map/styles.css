@@ -5,9 +5,9 @@ body {
     min-height: 100vh;
     overflow: hidden;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    transition: background 0.5s ease;
+    background: transparent;
     position: relative;
 }
 
@@ -15,10 +15,14 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, hsl(115, 100%, 50%) 0%, hsl(315, 100%, 50%) 100%);
-    z-index: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    transition: background 0.3s ease;
+    background: radial-gradient(circle 110vh at 30% 50%, hsl(115, 100%, 50%) 0%, hsl(315, 100%, 50%) 70%);
 }
 
 .background::before {
@@ -37,39 +41,64 @@ body {
     mix-blend-mode: overlay;
 }
 
-/* Gradient background classes */
-body.good {
-    background: radial-gradient(circle at center, hsl(115, 100%, 50%) 0%, hsl(315, 100%, 50%) 100%);
-}
-
-body.moderate {
-    background: radial-gradient(circle at center, hsl(60, 100%, 50%) 0%, hsl(240, 100%, 50%) 100%);
-}
-
-body.unhealthy-sensitive {
-    background: radial-gradient(circle at center, hsl(30, 100%, 50%) 0%, hsl(210, 100%, 50%) 100%);
-}
-
-body.unhealthy {
-    background: radial-gradient(circle at center, hsl(0, 100%, 50%) 0%, hsl(180, 100%, 50%) 100%);
-}
-
-body.very-unhealthy {
-    background: radial-gradient(circle at center, hsl(300, 100%, 50%) 0%, hsl(120, 100%, 50%) 100%);
-}
-
-body.hazardous {
-    background: radial-gradient(circle at center, hsl(0, 100%, 30%) 0%, hsl(180, 100%, 30%) 100%);
-}
-
 .map-container {
     position: relative;
-    width: 80vh;
-    height: 80vh;
+    width: 110vh;
+    height: 110vh;
     border-radius: 50%;
     overflow: hidden;
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-    border: 2px solid white;
+    background: transparent;
+    z-index: 1;
+    margin-left: -5vh;
+    margin-top: -5vh;
+    border-top: 5px solid black;
+    border-bottom: 5px solid black;
+    border-left: 20px solid black;
+    border-right: 20px solid black;
+}
+
+.gradient-circle {
+    position: fixed;
+    top: 80%;
+    left: 95vh;
+    transform: translate(-50%, -50%);
+    width: 30vh;
+    height: 30vh;
+    border-radius: 50%;
+    background: transparent;
+    z-index: 2;
+    overflow: hidden;
+    pointer-events: none;
+    transition: background 0.3s ease;
+}
+
+.gradient-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.05;
+    background-image: url('img/grain.jpg');
+    background-size: cover;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    z-index: 3;
+}
+
+.gradient-circle::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-overlay, radial-gradient(circle at center, hsl(115, 100%, 50%) 0%, hsl(315, 100%, 50%) 100%));
+    opacity: 1;
+    mix-blend-mode: normal;
+    transition: background 0.3s ease;
+    z-index: 2;
 }
 
 #map {
@@ -78,7 +107,7 @@ body.hazardous {
     bottom: 0;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 1;
     background: transparent;
 }
 
@@ -176,49 +205,67 @@ body.hazardous {
 }
 
 #air-quality-info {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
+    position: relative;
     width: 300px;
     max-width: 300px;
     background-color: transparent;
     color: black;
     padding: 20px;
     font-family: 'Air', sans-serif;
-    z-index: 1999;
     text-align: center;
     opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-#air-quality-info.visible {
-    opacity: 1;
-    visibility: visible;
-}
-
-#air-quality-info .info-logo {
-    width: 100%;
-    max-width: 200%;
-    height: auto;
-    margin-bottom: -20px;
-    opacity: 0;
+    pointer-events: none;
     transition: opacity 0.3s ease;
-    margin-left: auto;
-    margin-right: auto;
+    display: none;
+    margin-top: 180px;
 }
 
-#air-quality-info.visible .info-logo {
-    opacity: 1;
+/* Add a content wrapper */
+#air-quality-info .content-wrapper {
+    position: relative;
+    margin-top: 200px;
 }
 
 #air-quality-info h2,
 #air-quality-info p,
 #air-quality-info .aqi-container,
 #air-quality-info .parameters {
+    position: relative;
+    z-index: 1;
+}
+
+#air-quality-info.visible {
+    opacity: 1;
+    pointer-events: auto;
+    display: block;
+}
+
+#air-quality-info.visible ~ .logo-container {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#air-quality-info .info-logo {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 5%;
+    max-width: 200%;
+    height: auto;
     opacity: 0;
     transition: opacity 0.3s ease;
-    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+}
+
+#air-quality-info.visible .info-logo {
+    opacity: 1;
+}
+
+#air-quality-info .info-logo img {
+    max-width: 200px;
+    height: auto;
 }
 
 #air-quality-info.visible h2,
@@ -254,15 +301,22 @@ body.hazardous {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin: 15px 0;
     padding: 10px;
-    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    margin-left: -10px;
+    margin-top: 15px;
 }
 
 #air-quality-info .aqi-value {
     font-size: 36px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    width: 100%;
     text-align: center;
 }
 
@@ -270,6 +324,10 @@ body.hazardous {
     font-size: 14px;
     letter-spacing: -0.5px;
     text-transform: uppercase;
+    margin: 5px 0 0 0;
+    padding: 0;
+    line-height: 1;
+    width: 100%;
     text-align: center;
 }
 
@@ -279,6 +337,7 @@ body.hazardous {
     gap: 10px;
     margin-bottom: 15px;
     align-items: center;
+    margin-top: 15px;
 }
 
 #air-quality-info .parameter {
@@ -301,14 +360,13 @@ body.hazardous {
 }
 
 .info-logo img {
-    max-width: 100px;
+    max-width: 200px;
     height: auto;
 }
 
 #neighborhood-name {
-    margin: 0 0 0px 0;
+    margin: 0;
     font-size: 20px;
-    margin-top: 100px;
 }
 
 #monitor-location {
@@ -389,29 +447,8 @@ body.hazardous {
     border: 2px solid black;
 }
 
-.marker-glow-icon {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    opacity: 0.5;
-}
-.marker-glow-good {
-    background: radial-gradient(circle at center, hsl(115,100%,50%) 0%, hsla(115,100%,50%,0) 70%);
-}
-.marker-glow-moderate {
-    background: radial-gradient(circle at center, hsl(60,100%,50%) 0%, hsla(60,100%,50%,0) 70%);
-}
-.marker-glow-unhealthy {
-    background: radial-gradient(circle at center, hsl(30,100%,50%) 0%, hsla(30,100%,50%,0) 70%);
-}
-.marker-glow-veryunhealthy {
-    background: radial-gradient(circle at center, hsl(0,100%,50%) 0%, hsla(0,100%,50%,0) 70%);
-}
-
 .map-selector, .chat-selector {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+    position: fixed;
     padding: 5px 10px;
     font-size: 12px;
     cursor: pointer;
@@ -419,11 +456,22 @@ body.hazardous {
     align-items: center;
     justify-content: center;
     gap: 5px;
-    z-index: 2;
+    z-index: 3;
     mix-blend-mode: normal;
     border: 2px solid black;
     width: 50px;
     height: 10px;
+    background: transparent;
+}
+
+.map-selector {
+    top: 10px;
+    left: 10px;
+}
+
+.chat-selector {
+    top: 38.5px;
+    left: 10px;
 }
 
 .map-selector a, .chat-selector a {
@@ -436,10 +484,6 @@ body.hazardous {
 
 .map-selector a:hover, .chat-selector a:hover {
     opacity: 0.7;
-}
-
-.chat-selector {
-    top: 38.5px;
 }
 
 .circle-container {
@@ -522,4 +566,64 @@ body.hazardous {
 
 .triangle-left:hover, .triangle-right:hover {
     opacity: 0.8;
+}
+
+.right-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    padding-bottom: 65px;
+    margin-top: -15vh;
+}
+
+.logo-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    mix-blend-mode: normal;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.logo-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.logo {
+    width: auto;
+    max-width: 90%;
+    height: auto;
+    max-height: 50vh;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    margin-top: 100px;
+}
+
+.instruction-text {
+    font-family: 'Air', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: black;
+    text-align: center;
+    text-transform: uppercase;
+    background: transparent;
+    margin-top: -130px;
+    padding: 5px 10px;
+    opacity: 1;
+    position: relative;
+    z-index: 3;
+    border: 2px solid black;
 }

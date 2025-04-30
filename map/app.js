@@ -8,11 +8,19 @@ const neighborhoodAQIData = {};
 
 // Color scales for AQI
 const getColor = (aqi) => {
-    if (aqi <= 50) return ['#00e400', '#00cc00'];
-    if (aqi <= 100) return ['#ffff00', '#ffd700'];
-    if (aqi <= 150) return ['#ff7e00', '#ff6b00'];
-    return ['#ff0000', '#cc0000'];
+    if (aqi <= 50) return ['hsl(115, 100%, 50%)', 'hsl(315, 100%, 50%)']; // Good - Green to Pink
+    if (aqi <= 100) return ['hsl(60, 100%, 50%)', 'hsl(229, 92.80%, 51.20%)']; // Moderate - Yellow to Bright Blue
+    if (aqi <= 150) return ['hsl(30, 100%, 50%)', 'hsl(210, 100%, 50%)']; // Unhealthy for Sensitive Groups - Orange to Blue
+    if (aqi <= 200) return ['hsl(0, 100%, 50%)', 'hsl(180, 100%, 50%)']; // Unhealthy - Red to Cyan
+    if (aqi <= 300) return ['hsl(300, 100%, 50%)', 'hsl(120, 100%, 50%)']; // Very Unhealthy - Purple to Green
+    return ['hsl(0, 100%, 30%)', 'hsl(180, 100%, 30%)']; // Hazardous - Dark Red to Dark Cyan
 };
+
+// Function to create gradient style
+function createGradientStyle(aqi) {
+    const colors = getColor(aqi);
+    return `radial-gradient(circle 110vh at 30% 50%, ${colors[0]} 0%, ${colors[1]} 70%)`;
+}
 
 // Function to fetch real air quality data from AirNow API
 async function fetchAirQualityData(neighborhood, coords) {
@@ -183,47 +191,27 @@ async function createPopupContent(neighborhood) {
     `;
 }
 
-// Function to update or create the gradient overlay
+// Function to update background gradient
 function updateGradientOverlay(aqi) {
-    let overlay = document.getElementById('gradient-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'gradient-overlay';
-        overlay.style.position = 'absolute';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.right = '0';
-        overlay.style.bottom = '0';
-        overlay.style.width = '100vw';
-        overlay.style.height = '100vh';
-        overlay.style.pointerEvents = 'none';
-        overlay.style.zIndex = '1001'; // Above map, below info panel
-        overlay.style.mixBlendMode = 'normal';
-        document.body.appendChild(overlay);
+    const backgroundElement = document.querySelector('.background');
+    if (backgroundElement) {
+        const gradientStyle = createGradientStyle(aqi);
+        backgroundElement.style.background = gradientStyle;
     }
-    overlay.style.background = createGradientStyle(aqi);
-    overlay.style.opacity = '1'; // Fully opaque, map not visible
-}
-
-// Update updateMapBackground to also update the gradient overlay
-function updateMapBackground(aqi) {
-    const mapOverlay = document.querySelector('.map-overlay');
-    if (mapOverlay) {
-        mapOverlay.className = 'map-overlay';
-        const category = getAQICategory(aqi);
-        mapOverlay.classList.add(category);
-    }
-    updateGradientOverlay(aqi);
 }
 
 // Function to update air quality info panel
 async function updateAirQualityInfo(neighborhood) {
     const infoPanel = document.getElementById('air-quality-info');
+    const logoContainer = document.querySelector('.logo-container');
+    
+    // Show the info panel
     infoPanel.style.display = 'block';
-    // Trigger reflow
-    infoPanel.offsetHeight;
-    // Add visible class for transition
+    infoPanel.offsetHeight; // Trigger reflow
     infoPanel.classList.add('visible');
+    
+    // Hide the logo container
+    logoContainer.classList.add('hidden');
     
     document.getElementById('neighborhood-name').textContent = neighborhood;
     document.getElementById('monitor-location').textContent = 'Loading data...';
@@ -240,23 +228,24 @@ async function updateAirQualityInfo(neighborhood) {
         document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleString()}`;
         document.getElementById('monitor-location').style.display = 'none';
 
-        // Update background based on AQI
-        const category = getAQICategory(data.aqi);
-        document.body.className = ''; // Remove all classes
-        document.body.classList.add(category);
+        // Update gradient based on AQI
+        updateGradientOverlay(data.aqi);
     } catch (error) {
         console.error('Error updating air quality info:', error);
         document.getElementById('monitor-location').style.display = 'none';
-        document.body.className = ''; // Reset to default gradient
     }
 }
 
 // Add click handler to close info panel when clicking outside
 document.addEventListener('click', function(e) {
     const airQualityInfo = document.getElementById('air-quality-info');
+    const logoContainer = document.querySelector('.logo-container');
+    
     if (!e.target.closest('#air-quality-info') && !e.target.closest('.leaflet-marker-icon')) {
         if (airQualityInfo) {
             airQualityInfo.classList.remove('visible');
+            logoContainer.classList.remove('hidden');
+            
             setTimeout(() => {
                 airQualityInfo.style.display = 'none';
             }, 300); // Match the transition duration
@@ -445,6 +434,12 @@ document.addEventListener('DOMContentLoaded', () => {
         currentCircleIndex = (currentCircleIndex + 1) % 8;
         updateContent();
     });
+
+    // Initialize with default gradient (Good AQI colors)
+    const backgroundElement = document.querySelector('.background');
+    if (backgroundElement) {
+        backgroundElement.style.background = createGradientStyle(50); // 50 is in the "Good" range
+    }
 });
 
 function updateContent() {

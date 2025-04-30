@@ -20,42 +20,50 @@
     <div class="map-container">
         <div id="map"></div>
     </div>
+    <div class="right-container">
+        <div class="logo-container">
+            <img src="img/air-transparent.png" alt="AIR" class="logo">
+            <div class="instruction-text">Drag, zoom, and click markers to explore</div>
+        </div>
+        <div id="air-quality-info">
+            <div class="info-logo">
+                <img src="img/air-transparent.png" alt="AIR Logo">
+            </div>
+            <div class="content-wrapper">
+                <h2 id="neighborhood-name">Select a Neighborhood</h2>
+                <p id="monitor-location">Click on a neighborhood to view air quality data</p>
+                <div class="aqi-container">
+                    <div class="aqi-value" id="aqi-value">--</div>
+                    <div class="aqi-category" id="aqi-category">No Data</div>
+                </div>
+                <div class="parameters">
+                    <div class="parameter">
+                        <span class="param-name">PM2.5</span>
+                        <span class="param-value" id="pm25-value">-- µg/m³</span>
+                    </div>
+                    <div class="parameter">
+                        <span class="param-name">PM10</span>
+                        <span class="param-value" id="pm10-value">-- µg/m³</span>
+                    </div>
+                    <div class="parameter">
+                        <span class="param-name">O3</span>
+                        <span class="param-value" id="o3-value">-- ppm</span>
+                    </div>
+                    <div class="parameter">
+                        <span class="param-name">NO2</span>
+                        <span class="param-value" id="no2-value">-- µg/m³</span>
+                    </div>
+                </div>
+                <p class="data-source" id="data-source">Source: --</p>
+                <p class="last-updated" id="last-updated">Last Updated: --</p>
+            </div>
+        </div>
+    </div>
     <div class="map-selector">
         <a href="https://dxxidlee.github.io/AIRNY/home/" target="_blank">HOME</a>
     </div>
     <div class="chat-selector">
         <a href="https://dxxidlee.github.io/AIRNY/chat/" target="_blank">CHAT</a>
-    </div>
-    <div id="air-quality-info">
-        <div class="info-logo">
-            <img src="img/air-transparent.png" alt="AIR Logo">
-        </div>
-        <h2 id="neighborhood-name">Select a Neighborhood</h2>
-        <p id="monitor-location">Click on a neighborhood to view air quality data</p>
-        <div class="aqi-container">
-            <div class="aqi-value" id="aqi-value">--</div>
-            <div class="aqi-category" id="aqi-category">No Data</div>
-        </div>
-        <div class="parameters">
-            <div class="parameter">
-                <span class="param-name">PM2.5</span>
-                <span class="param-value" id="pm25-value">-- µg/m³</span>
-            </div>
-            <div class="parameter">
-                <span class="param-name">PM10</span>
-                <span class="param-value" id="pm10-value">-- µg/m³</span>
-            </div>
-            <div class="parameter">
-                <span class="param-name">O3</span>
-                <span class="param-value" id="o3-value">-- ppm</span>
-            </div>
-            <div class="parameter">
-                <span class="param-name">NO2</span>
-                <span class="param-value" id="no2-value">-- µg/m³</span>
-            </div>
-        </div>
-        <p class="data-source" id="data-source">Source: --</p>
-        <p class="last-updated" id="last-updated">Last Updated: --</p>
     </div>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

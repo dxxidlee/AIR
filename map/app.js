@@ -47,6 +47,10 @@ function interpolateHsl(start, end, progress) {
 function createGradientStyle(startColors, endColors, progress) {
     const startColor = interpolateHsl(startColors[0], endColors[0], progress);
     const endColor = interpolateHsl(startColors[1], endColors[1], progress);
+    
+    if (window.innerWidth <= 768) {
+        return `radial-gradient(circle 65vh at 50% 30%, ${startColor} 0%, ${endColor} 70%)`;
+    }
     return `radial-gradient(circle 110vh at 30% 50%, ${startColor} 0%, ${endColor} 70%)`;
 }
 

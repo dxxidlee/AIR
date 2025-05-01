@@ -636,17 +636,134 @@ body {
     border: 2px solid black;
 }
 
-/* Add mobile styles */
+/* Mobile styles */
 @media screen and (max-width: 768px) {
-    #air-quality-info {
-        bottom: 5vh;
-        width: 90%;
+    body {
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+        overflow-y: hidden;
     }
-}
 
-/* Specific iOS fixes */
-@supports (-webkit-touch-callout: none) {
+    .map-container {
+        width: 100vw;
+        height: 45vh;
+        margin-left: 0%;
+        margin-top: 12.5%;
+        border-radius: 50%;
+        border-top: 5px solid black;
+        border-bottom: 5px solid black;
+        border-left: 20px solid black;
+        border-right: 20px solid black;
+    }
+
+    #map{
+        width: 120%;
+        left:-10%;
+    }
+
+    .right-container {
+        position: relative;
+        width: 100%;
+        height: 50vh;
+        padding: 20px;
+        margin: 0;
+        top: auto;
+        right: auto;    
+    }
+
+    .logo-container {
+        margin-top: 0;
+        margin-bottom: 30vh;
+    }
+
+    .logo {
+        max-width: 60%;
+        margin-top: 80px;
+        margin-bottom: -20px;
+    }
+
     #air-quality-info {
-        bottom: 15vh;
+        position: relative;
+        width: 120%;
+        height: 120%;
+        margin: 0 auto;
+        padding: 10px;
+        margin-top: 130px;
+        margin-right: 40%;
+    }
+
+    #air-quality-info .content-wrapper {
+        margin-top: 70px;
+    }
+
+    .info-logo img {
+        max-width: 50px;
+        width: 40%;
+        margin-top: -30px;
+        margin-bottom: 0px;
+    }
+
+    #air-quality-info h2 {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    #air-quality-info .aqi-container {
+        margin: 10px 0;
+    }
+
+    #air-quality-info .aqi-value {
+        font-size: 32px;
+        margin: 0;
+        margin-right: 20px;
+    }
+
+    #air-quality-info .aqi-category {
+        font-size: 16px;
+        margin: 4px 0;
+        margin-right: 20px;
+    }
+
+    #air-quality-info .parameters {
+        margin-top: 12px;
+        gap: 6px;
+    }
+
+    #air-quality-info .parameter {
+        font-size: 16px;
+        margin-bottom: 2px;
+        padding-bottom: 1px;
+        border-bottom: 1px solid black;
+    }
+
+    #air-quality-info .data-source,
+    #air-quality-info .last-updated {
+        font-size: 12px;
+        margin: 0px 0;
+    }
+
+    .map-selector, .chat-selector {
+        z-index: 1000;
+    }
+
+    .instruction-text {
+        margin-top: -40px;
+        font-size: 12px;
+        padding: 3px 8px;
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    #air-quality-info #monitor-location {
+        font-size: 11px;
+        margin-bottom: 8px;
+    }
+
+    .background {
+        background: radial-gradient(circle 65vh at 50% 30%, hsl(115, 100%, 50%) 0%, hsl(315, 100%, 50%) 70%);
     }
 }

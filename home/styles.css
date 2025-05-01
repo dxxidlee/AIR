@@ -379,7 +379,6 @@ body::after {
     mix-blend-mode: overlay;
 }
 
-/* Add mobile styles */
 @media screen and (max-width: 768px) {
     #air-quality-info {
         bottom: 0vh;
@@ -387,7 +386,6 @@ body::after {
     }
 }
 
-/* Specific iOS fixes */
 @supports (-webkit-touch-callout: none) {
     #air-quality-info {
         bottom: 5vh;

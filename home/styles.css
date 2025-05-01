@@ -382,7 +382,7 @@ body::after {
 /* Add mobile styles */
 @media screen and (max-width: 768px) {
     #air-quality-info {
-        bottom: 5vh;
+        bottom: 0vh;
         width: 90%;
     }
 }
@@ -390,6 +390,6 @@ body::after {
 /* Specific iOS fixes */
 @supports (-webkit-touch-callout: none) {
     #air-quality-info {
-        bottom: 15vh;
+        bottom: 5vh;
     }
 }

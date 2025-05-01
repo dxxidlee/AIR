@@ -378,3 +378,18 @@ body::after {
     pointer-events: none;
     mix-blend-mode: overlay;
 }
+
+/* Add mobile styles */
+@media screen and (max-width: 768px) {
+    #air-quality-info {
+        bottom: 5vh;
+        width: 90%;
+    }
+}
+
+/* Specific iOS fixes */
+@supports (-webkit-touch-callout: none) {
+    #air-quality-info {
+        bottom: 15vh;
+    }
+}

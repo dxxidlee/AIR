@@ -9,18 +9,48 @@ const neighborhoodAQIData = {};
 // Color scales for AQI
 const getColor = (aqi) => {
     if (aqi <= 50) return ['hsl(115, 100%, 50%)', 'hsl(315, 100%, 50%)']; // Good - Green to Pink
-    if (aqi <= 100) return ['hsl(60, 100%, 50%)', 'hsl(229, 92.80%, 51.20%)']; // Moderate - Yellow to Bright Blue
+    if (aqi <= 100) return ['hsl(60, 100%, 50%)', 'hsl(229, 100%, 50%)']; // Moderate - Yellow to Blue
     if (aqi <= 150) return ['hsl(30, 100%, 50%)', 'hsl(210, 100%, 50%)']; // Unhealthy for Sensitive Groups - Orange to Blue
     if (aqi <= 200) return ['hsl(0, 100%, 50%)', 'hsl(180, 100%, 50%)']; // Unhealthy - Red to Cyan
     if (aqi <= 300) return ['hsl(300, 100%, 50%)', 'hsl(120, 100%, 50%)']; // Very Unhealthy - Purple to Green
     return ['hsl(0, 100%, 30%)', 'hsl(180, 100%, 30%)']; // Hazardous - Dark Red to Dark Cyan
 };
 
-// Function to create gradient style
-function createGradientStyle(aqi) {
-    const colors = getColor(aqi);
-    return `radial-gradient(circle 110vh at 30% 50%, ${colors[0]} 0%, ${colors[1]} 70%)`;
+// Function to interpolate between two colors
+function interpolateHsl(start, end, progress) {
+    const startMatch = start.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+    const endMatch = end.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+    
+    if (!startMatch || !endMatch) return start;
+    
+    const startH = parseInt(startMatch[1]);
+    const startS = parseInt(startMatch[2]);
+    const startL = parseInt(startMatch[3]);
+    const endH = parseInt(endMatch[1]);
+    const endS = parseInt(endMatch[2]);
+    const endL = parseInt(endMatch[3]);
+    
+    // Handle hue wrapping
+    let hueDiff = endH - startH;
+    if (Math.abs(hueDiff) > 180) {
+        hueDiff = hueDiff > 0 ? hueDiff - 360 : hueDiff + 360;
+    }
+    
+    const h = (startH + hueDiff * progress + 360) % 360;
+    const s = startS + (endS - startS) * progress;
+    const l = startL + (endL - startL) * progress;
+    
+    return `hsl(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(l)}%)`;
 }
+
+// Function to create gradient style
+function createGradientStyle(startColors, endColors, progress) {
+    const startColor = interpolateHsl(startColors[0], endColors[0], progress);
+    const endColor = interpolateHsl(startColors[1], endColors[1], progress);
+    return `radial-gradient(circle 110vh at 30% 50%, ${startColor} 0%, ${endColor} 70%)`;
+}
+
+let isTransitioning = false;
 
 // Function to fetch real air quality data from AirNow API
 async function fetchAirQualityData(neighborhood, coords) {
@@ -192,12 +222,39 @@ async function createPopupContent(neighborhood) {
 }
 
 // Function to update background gradient
-function updateGradientOverlay(aqi) {
-    const backgroundElement = document.querySelector('.background');
-    if (backgroundElement) {
-        const gradientStyle = createGradientStyle(aqi);
-        backgroundElement.style.background = gradientStyle;
+let currentAqi = 50; // Store current AQI to enable smooth transitions
+function updateGradientOverlay(newAqi) {
+    if (isTransitioning || currentAqi === newAqi) return;
+    isTransitioning = true;
+
+    const startColors = getColor(currentAqi);
+    const endColors = getColor(newAqi);
+    const startTime = performance.now();
+    const duration = 500; // Reduced from 1000ms to 500ms for faster transition
+
+    function animate(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Smoother easing function
+        const easedProgress = progress < 0.5 
+            ? 4 * progress * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        const backgroundElement = document.querySelector('.background');
+        if (backgroundElement) {
+            backgroundElement.style.background = createGradientStyle(startColors, endColors, easedProgress);
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            currentAqi = newAqi;
+            isTransitioning = false;
+        }
     }
+
+    requestAnimationFrame(animate);
 }
 
 // Function to update air quality info panel
@@ -438,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize with default gradient (Good AQI colors)
     const backgroundElement = document.querySelector('.background');
     if (backgroundElement) {
-        backgroundElement.style.background = createGradientStyle(50); // 50 is in the "Good" range
+        backgroundElement.style.background = createGradientStyle(getColor(50), getColor(100), 0.5); // 50 is in the "Good" range
     }
 });
 

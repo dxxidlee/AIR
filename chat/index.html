@@ -16,21 +16,75 @@
         </style>
     </head>
     <body>
-        
-        <div class="chat-container">
-            <div class="chat-header">
-                <img src="../map/img/air-transparent.png" alt="AIRNY" class="logo">
-                <div class="nav-buttons">
-                    <a href="../map/" class="nav-button">MAP</a>
-                    <a href="../home/" class="nav-button">HOME</a>
+        <div class="background"></div>
+        <div class="map-selector">
+            <a href="https://dxxidlee.github.io/AIRNY/home/">HOME</a>
+        </div>
+        <div class="home-selector">
+            <a href="https://dxxidlee.github.io/AIRNY/map/">MAP</a>
+        </div>
+
+        <div class="chat-section">
+            <div class="chat-tabs">
+                <div class="chat-toggle" onclick="toggleChat(1)">General</div>
+                <div class="chat-toggle" onclick="toggleChat(2)">Need Help</div>
+                <div class="chat-toggle" onclick="toggleChat(3)">Offer Help</div>
+                <div class="chat-toggle" onclick="toggleChat(4)">Ask AIRNY</div>
+            </div>
+
+            <div class="chat-container collapsed" id="chat-1">
+                <div class="chat-content">
+                    <div class="chat-messages" id="chat-messages-1">
+                        <!-- Messages will be added here dynamically -->
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="message-input-1" placeholder="Type your message..." autocomplete="off">
+                        <button id="send-button-1">Send</button>
+                    </div>
                 </div>
             </div>
-            <div class="chat-messages" id="chat-messages">
-                <!-- Messages will be added here dynamically -->
+
+            <div class="chat-container collapsed" id="chat-2">
+                <div class="chat-content">
+                    <div class="chat-messages" id="chat-messages-2">
+                        <!-- Messages will be added here dynamically -->
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="message-input-2" placeholder="Type your message..." autocomplete="off">
+                        <button id="send-button-2">Send</button>
+                    </div>
+                </div>
             </div>
-            <div class="chat-input-container">
-                <input type="text" id="message-input" placeholder="Type your message..." autocomplete="off">
-                <button id="send-button">Send</button>
+
+            <div class="chat-container collapsed" id="chat-3">
+                <div class="chat-content">
+                    <div class="chat-messages" id="chat-messages-3">
+                        <!-- Messages will be added here dynamically -->
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="message-input-3" placeholder="Type your message..." autocomplete="off">
+                        <button id="send-button-3">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-container collapsed" id="chat-4">
+                <div class="chat-content">
+                    <div class="chat-messages" id="chat-messages-4">
+                        <!-- Messages will be added here dynamically -->
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="message-input-4" placeholder="Type your message..." autocomplete="off">
+                        <button id="send-button-4">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-container">
+            <div class="logo-container">
+                <img src="../map/img/air-transparent.png" alt="AIRNY" class="logo">
+                <div class="instruction-text">Chat with AIRNY about air quality</div>
             </div>
         </div>
         <script src="app.js"></script>

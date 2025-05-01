@@ -3,9 +3,17 @@
     src: url('ABCFavoritExpanded-Bold-Trial.otf') format('truetype');
 }
 
+html {
+    height: -webkit-fill-available;
+    height: 100%;
+    background: black;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
+    min-height: -webkit-fill-available;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -334,9 +342,25 @@ body::after {
     bottom: 0;
     width: 100vw;
     height: 100vh;
+    height: -webkit-fill-available;
     z-index: -1;
     pointer-events: none;
     transition: background 1s ease;
+    margin: 0;
+    padding: 0;
+}
+
+/* Fix for mobile Safari */
+@supports (-webkit-touch-callout: none) {
+    .background {
+        height: 100vh;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+    
+    body {
+        min-height: -webkit-fill-available;
+        height: 100vh;
+    }
 }
 
 .background::before {

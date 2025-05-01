@@ -520,7 +520,7 @@ body {
     #message-input-1, #message-input-2, #message-input-3, #message-input-4 {
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.3);
-        color: white;
+        color: black;
         font-size: 16px;
         padding: 10px 12px;
     }

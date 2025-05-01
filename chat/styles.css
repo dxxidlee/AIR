@@ -148,24 +148,38 @@ body {
 }
 
 .message {
-    max-width: 70%;
+    margin: 10px;
     padding: 10px 15px;
     border-radius: 15px;
-    margin: 5px 0;
+    max-width: 80%;
     word-wrap: break-word;
 }
 
 .user-message {
     background-color: white;
     color: black;
-    align-self: flex-end;
+    margin-left: auto;
     border-bottom-right-radius: 5px;
 }
 
 .bot-message {
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
-    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+}
+
+.sender-name {
+    display: block;
+    font-size: 0.85em;
+    margin-bottom: 4px;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+/* Style for messages from other participants */
+.message:not(.user-message):not(.bot-message) {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
     border-bottom-left-radius: 5px;
 }
 

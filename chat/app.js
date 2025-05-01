@@ -752,7 +752,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const endColor = `hsl(${endHue}, 100%, 50%)`;
         
         const backgroundElement = document.querySelector('.background');
-        backgroundElement.style.background = `radial-gradient(circle 110vh at 30% 50%, ${startColor} 0%, ${endColor} 70%)`;
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            backgroundElement.style.background = `radial-gradient(circle 75vh at 50% 45%, ${startColor} 0%, ${endColor} 70%)`;
+        } else {
+            backgroundElement.style.background = `radial-gradient(circle 110vh at 30% 50%, ${startColor} 0%, ${endColor} 70%)`;
+        }
     }
 
     // Function to smoothly transition between gradients
@@ -777,7 +783,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const endColor = `hsl(${endHue}, 100%, 50%)`;
 
             const backgroundElement = document.querySelector('.background');
-            backgroundElement.style.background = `radial-gradient(circle 110vh at 30% 50%, ${startColor} 0%, ${endColor} 70%)`;
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                backgroundElement.style.background = `radial-gradient(circle 75vh at 50% 45%, ${startColor} 0%, ${endColor} 70%)`;
+            } else {
+                backgroundElement.style.background = `radial-gradient(circle 110vh at 30% 50%, ${startColor} 0%, ${endColor} 70%)`;
+            }
 
             if (progress < 1) {
                 requestAnimationFrame(animate);

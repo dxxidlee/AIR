@@ -211,7 +211,7 @@ body {
 }
 
 #air-quality-info {
-    position: relative;
+    position: fixed;
     width: 300px;
     max-width: 300px;
     background-color: transparent;
@@ -223,7 +223,9 @@ body {
     pointer-events: none;
     transition: opacity 0.3s ease;
     display: none;
-    margin-top: 180px;
+    bottom: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /* Add a content wrapper */
@@ -637,23 +639,14 @@ body {
 /* Add mobile styles */
 @media screen and (max-width: 768px) {
     #air-quality-info {
-        margin-top: 65vh;
-        transform: translateY(-50%);
-    }
-    
-    #air-quality-info .content-wrapper {
-        margin-top: 65vh;
-        transform: translateY(-50%);
+        bottom: 5vh;
+        width: 90%;
     }
 }
 
 /* Specific iOS fixes */
 @supports (-webkit-touch-callout: none) {
     #air-quality-info {
-        margin-top: 80vh;
-    }
-    
-    #air-quality-info .content-wrapper {
-        margin-top: 80vh;
+        bottom: 15vh;
     }
 }

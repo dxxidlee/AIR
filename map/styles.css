@@ -637,10 +637,23 @@ body {
 /* Add mobile styles */
 @media screen and (max-width: 768px) {
     #air-quality-info {
-        margin-top: 550px;
+        margin-top: 65vh;
+        transform: translateY(-50%);
     }
     
     #air-quality-info .content-wrapper {
-        margin-top: 550px;
+        margin-top: 65vh;
+        transform: translateY(-50%);
+    }
+}
+
+/* Specific iOS fixes */
+@supports (-webkit-touch-callout: none) {
+    #air-quality-info {
+        margin-top: 70vh;
+    }
+    
+    #air-quality-info .content-wrapper {
+        margin-top: 70vh;
     }
 }

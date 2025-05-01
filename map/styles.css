@@ -650,10 +650,10 @@ body {
 /* Specific iOS fixes */
 @supports (-webkit-touch-callout: none) {
     #air-quality-info {
-        margin-top: 70vh;
+        margin-top: 80vh;
     }
     
     #air-quality-info .content-wrapper {
-        margin-top: 70vh;
+        margin-top: 80vh;
     }
 }

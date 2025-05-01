@@ -226,17 +226,6 @@ body {
     margin-top: 180px;
 }
 
-/* Add mobile styles */
-@media screen and (max-width: 768px) {
-    #air-quality-info {
-        margin-top: 250px;
-    }
-    
-    #air-quality-info .content-wrapper {
-        margin-top: 250px;
-    }
-}
-
 /* Add a content wrapper */
 #air-quality-info .content-wrapper {
     position: relative;
@@ -643,4 +632,15 @@ body {
     position: relative;
     z-index: 3;
     border: 2px solid black;
+}
+
+/* Add mobile styles */
+@media screen and (max-width: 768px) {
+    #air-quality-info {
+        margin-top: 550px;
+    }
+    
+    #air-quality-info .content-wrapper {
+        margin-top: 550px;
+    }
 }

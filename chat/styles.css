@@ -234,14 +234,21 @@ body {
 #message-input-1, #message-input-2, #message-input-3, #message-input-4 {
     flex: 1;
     padding: 12px 15px;
-    border: 2px solid white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 5px;
     font-family: 'Air', Arial, sans-serif;
     font-size: 14px;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.1);
     color: white;
     outline: none;
     min-width: 0;
+    transition: all 0.3s ease;
+}
+
+#message-input-1:focus, #message-input-2:focus, 
+#message-input-3:focus, #message-input-4:focus {
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 #message-input-1::placeholder, #message-input-2::placeholder, 
@@ -251,20 +258,20 @@ body {
 
 #send-button-1, #send-button-2, #send-button-3, #send-button-4 {
     padding: 12px 25px;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.9);
     color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-family: 'Air', Arial, sans-serif;
     font-size: 14px;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
     white-space: nowrap;
 }
 
 #send-button-1:hover, #send-button-2:hover, 
 #send-button-3:hover, #send-button-4:hover {
-    opacity: 0.8;
+    background-color: white;
 }
 
 .right-container {
@@ -452,7 +459,8 @@ body {
     }
 
     .chat-input-container {
-        padding: 10px 15px; /* Slightly reduced padding for mobile */
+        padding: 10px 15px;
+        background-color: rgba(255, 255, 255, 0.05);
     }
 
     .message {
@@ -507,5 +515,30 @@ body {
 
     .background {
         background: radial-gradient(circle 45vh at 65% 55%, hsl(115, 100%, 50%) 0%, hsl(315, 100%, 50%) 70%);
+    }
+
+    #message-input-1, #message-input-2, #message-input-3, #message-input-4 {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 16px;
+        padding: 10px 12px;
+    }
+
+    #message-input-1:focus, #message-input-2:focus, 
+    #message-input-3:focus, #message-input-4:focus {
+        border-color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    #message-input-1::placeholder, #message-input-2::placeholder, 
+    #message-input-3::placeholder, #message-input-4::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    #send-button-1, #send-button-2, #send-button-3, #send-button-4 {
+        padding: 10px 20px;
+        font-size: 16px;
+        background: rgba(255, 255, 255, 0.9);
     }
 }

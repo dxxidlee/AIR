@@ -266,6 +266,9 @@ async function updateAirQualityInfo(neighborhood) {
     const infoPanel = document.getElementById('air-quality-info');
     const logoContainer = document.querySelector('.logo-container');
     
+    // Prevent any layout shifts by setting a minimum height
+    infoPanel.style.minHeight = window.innerWidth <= 768 ? '45vh' : 'auto';
+    
     // Show the info panel
     infoPanel.style.display = 'block';
     infoPanel.offsetHeight; // Trigger reflow
@@ -279,18 +282,22 @@ async function updateAirQualityInfo(neighborhood) {
     
     try {
         const data = await getAQIForNeighborhood(neighborhood);
-        document.getElementById('aqi-value').textContent = data.aqi;
-        document.getElementById('aqi-category').textContent = data.category;
-        document.getElementById('pm25-value').textContent = data.pm25;
-        document.getElementById('pm10-value').textContent = data.pm10;
-        document.getElementById('o3-value').textContent = data.o3;
-        document.getElementById('no2-value').textContent = data.no2;
-        document.getElementById('data-source').textContent = 'Source: OpenAQ';
-        document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleString()}`;
-        document.getElementById('monitor-location').style.display = 'none';
+        
+        // Ensure smooth transition by wrapping DOM updates in requestAnimationFrame
+        requestAnimationFrame(() => {
+            document.getElementById('aqi-value').textContent = data.aqi;
+            document.getElementById('aqi-category').textContent = data.category;
+            document.getElementById('pm25-value').textContent = data.pm25;
+            document.getElementById('pm10-value').textContent = data.pm10;
+            document.getElementById('o3-value').textContent = data.o3;
+            document.getElementById('no2-value').textContent = data.no2;
+            document.getElementById('data-source').textContent = 'Source: OpenAQ';
+            document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleString()}`;
+            document.getElementById('monitor-location').style.display = 'none';
 
-        // Update gradient based on AQI
-        updateGradientOverlay(data.aqi);
+            // Update gradient based on AQI
+            updateGradientOverlay(data.aqi);
+        });
     } catch (error) {
         console.error('Error updating air quality info:', error);
         document.getElementById('monitor-location').style.display = 'none';
@@ -307,8 +314,9 @@ document.addEventListener('click', function(e) {
             airQualityInfo.classList.remove('visible');
             logoContainer.classList.remove('hidden');
             
+            // Reset any fixed heights after transition
             setTimeout(() => {
-                airQualityInfo.style.display = 'none';
+                airQualityInfo.style.minHeight = '';
             }, 300); // Match the transition duration
         }
     }

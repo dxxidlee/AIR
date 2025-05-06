@@ -381,7 +381,7 @@ body::after {
 
 @media screen and (max-width: 768px) {
     #air-quality-info {
-        margin-bottom: -7.5vh;
+        margin-bottom: -20.5vh;
         width: 80%;
         height: auto;
     }
@@ -389,6 +389,6 @@ body::after {
 
 @supports (-webkit-touch-callout: none) {
     #air-quality-info {
-        margin-bottom: -7.5vh;
+        margin-bottom: -20.5vh;
     }
 }
